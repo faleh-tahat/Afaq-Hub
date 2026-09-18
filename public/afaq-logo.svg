@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" role="img" aria-labelledby="title">
+  <title id="title">AFAQ Tech Team logo</title>
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22D7FF" />
+      <stop offset="100%" stop-color="#0B78E7" />
+    </linearGradient>
+    <linearGradient id="silver" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EEF4FA" />
+      <stop offset="100%" stop-color="#C3D0E1" />
+    </linearGradient>
+  </defs>
+  <rect width="720" height="240" fill="transparent" />
+
+  <!-- Nested circuit "A" mark -->
+  <g transform="translate(20 14)">
+    <!-- Outer A outline -->
+    <path
+      d="M100 18 L182 206 L146 206 L146 138 L54 138 L54 206 L18 206 Z"
+      fill="none"
+      stroke="url(#gradient)"
+      stroke-width="9"
+      stroke-linejoin="round"
+      stroke-linecap="round"
+    />
+    <!-- Inner nested A outline -->
+    <path
+      d="M100 58 L156 190 L131 190 L131 150 L69 150 L69 190 L44 190 Z"
+      fill="none"
+      stroke="url(#gradient)"
+      stroke-width="7"
+      stroke-linejoin="round"
+      stroke-linecap="round"
+      opacity="0.85"
+    />
+
+    <!-- Circuit node clusters -->
+    <circle cx="82" cy="122" r="5.5" fill="url(#gradient)" />
+    <circle cx="94" cy="134" r="5.5" fill="url(#gradient)" />
+    <circle cx="82" cy="146" r="5.5" fill="url(#gradient)" />
+    <circle cx="94" cy="158" r="5.5" fill="url(#gradient)" />
+
+    <circle cx="118" cy="122" r="5.5" fill="url(#gradient)" />
+    <circle cx="106" cy="134" r="5.5" fill="url(#gradient)" />
+    <circle cx="118" cy="146" r="5.5" fill="url(#gradient)" />
+    <circle cx="106" cy="158" r="5.5" fill="url(#gradient)" />
+
+    <path d="M82 122 L94 134 L82 146 L94 158" fill="none" stroke="url(#gradient)" stroke-width="3" stroke-linecap="round" opacity="0.7" />
+    <path d="M118 122 L106 134 L118 146 L106 158" fill="none" stroke="url(#gradient)" stroke-width="3" stroke-linecap="round" opacity="0.7" />
+  </g>
+
+  <text x="280" y="118" font-family="Inter, system-ui, sans-serif" font-size="76" font-weight="800" fill="url(#silver)">AFAQ</text>
+  <text x="280" y="187" font-family="Inter, system-ui, sans-serif" font-size="30" letter-spacing="0.12em" fill="#E5ECF4">Tech Team</text>
+</svg>

@@ -1,0 +1,9 @@
+module.exports = {
+  extends: ['next/core-web-vitals', 'next/typescript'],
+  rules: {
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
+    '@next/next/no-img-element': 'warn',
+    'no-console': ['warn', { allow: ['warn', 'error'] }],
+  },
+};
