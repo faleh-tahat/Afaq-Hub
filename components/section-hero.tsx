@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
@@ -15,12 +16,14 @@ export function SectionHero() {
     <section className="overflow-hidden bg-brand-950">
 
       {/* ── Hero Image — full width, all members visible ── */}
-      <div className="relative w-full">
-        <img
+      <div className="relative w-full" style={{ height: 'clamp(320px, 72vh, 780px)' }}>
+        <Image
           src="/hero-team.jpeg"
           alt="AFAQ Tech Team"
-          className="w-full object-cover object-top"
-          style={{ height: 'clamp(320px, 72vh, 780px)' }}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-top"
         />
         {/* Seamless fade into content section below */}
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-brand-950 to-transparent" />

@@ -34,8 +34,8 @@ export function CommitteeCards({
             transition={{ duration: 0.4, delay: i * 0.06, ease: 'easeOut' }}
           >
             <div
-              className="group relative flex h-full flex-col gap-4 overflow-hidden rounded-3xl px-7 py-8 text-right shadow-[0_1px_2px_rgba(0,0,0,0.15)] transition-all duration-300 ease-smooth hover:-translate-y-1.5 hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.45)]"
-              style={{ backgroundColor: item.bg, color }}
+              className="group relative flex h-full flex-col gap-4 overflow-hidden rounded-3xl px-7 py-8 text-right text-brand-200 shadow-[0_1px_2px_rgba(0,0,0,0.15)] transition-all duration-300 ease-smooth hover:-translate-y-1.5 hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.45)]"
+              style={{ backgroundColor: item.bg }}
             >
               {/* Diagonal texture — shifts on hover for a subtle shimmer */}
               <div
@@ -44,6 +44,7 @@ export function CommitteeCards({
                   backgroundImage:
                     'repeating-linear-gradient(135deg, currentColor 0px, currentColor 1.5px, transparent 1.5px, transparent 16px)',
                   backgroundPosition: '0 0',
+                  color,
                 }}
               />
 

@@ -8,14 +8,16 @@ import { useTranslation } from '@/components/language-provider';
 
 const iconMap = { GraduationCap, CalendarDays, Megaphone, Handshake, Cpu, Briefcase };
 
-const BOX_STYLES = [
-  { bg: '#000033', textColor: '#7F8292' },
-  { bg: '#7F8292', textColor: '#000033' },
-  { bg: '#000033', textColor: '#7F8292' },
-  { bg: '#7F8292', textColor: '#000033' },
-  { bg: '#000033', textColor: '#7F8292' },
-  { bg: '#7F8292', textColor: '#000033' },
-];
+// A single, unified card surface (the brand's "raised" elevation tone) with
+// the icon/underline/glow accent rotating through the logo's own cyan->blue
+// gradient family, instead of two flat, brand-unrelated colors.
+const CARD_BG = '#171A21';
+const ACCENT_ROTATION = ['#22D7FF', '#0B78E7', '#9BD8FF'];
+
+const BOX_STYLES = ACCENT_ROTATION.map((accent) => ({
+  bg: CARD_BG,
+  textColor: accent,
+}));
 
 export default function CommitteesPage() {
   const t = useTranslation();

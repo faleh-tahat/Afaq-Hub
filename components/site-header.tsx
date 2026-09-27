@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -10,13 +10,68 @@ import { buttonVariants } from '@/components/ui/button';
 import { useTranslation } from '@/components/language-provider';
 import { cn } from '@/lib/utils';
 
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const t = useTranslation();
+  const menuRef = useRef<HTMLDivElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
   const isActive = (href: string) =>
     href === '/' ? pathname === '/' : pathname.startsWith(href);
+
+  // Close on route change.
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  // While open: lock body scroll, close on Escape, trap Tab focus inside the
+  // panel, and return focus to the toggle button on close.
+  useEffect(() => {
+    if (!open) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const firstFocusable = menuRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
+    firstFocusable?.focus();
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setOpen(false);
+        return;
+      }
+      if (e.key !== 'Tab' || !menuRef.current) return;
+
+      const focusable = Array.from(
+        menuRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    const toggleButton = toggleRef.current;
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+      toggleButton?.focus();
+    };
+  }, [open]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-brand-950/90 backdrop-blur-2xl">
@@ -35,12 +90,13 @@ export function SiteHeader() {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav aria-label={t.footer.explore} className="hidden items-center gap-1 lg:flex">
           {t.navLinks.slice(0, 5).map((item) => (
             <Link
               key={item.href}
               href={item.href}
               data-active={isActive(item.href)}
+              aria-current={isActive(item.href) ? 'page' : undefined}
               className="nav-link rounded-lg px-3 py-2"
             >
               {item.label}
@@ -74,11 +130,13 @@ export function SiteHeader() {
 
         {/* Mobile Toggle */}
         <button
+          ref={toggleRef}
           type="button"
           aria-label={open ? t.header.closeMenu : t.header.openMenu}
           aria-expanded={open}
+          aria-controls="mobile-nav-menu"
           className={cn(
-            'inline-flex h-10 w-10 items-center justify-center rounded-xl border transition-all duration-200 lg:hidden',
+            'inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-all duration-200 lg:hidden',
             open
               ? 'border-accent/30 bg-accent/10 text-accent'
               : 'border-white/10 bg-brand-900 text-brand-300 hover:border-white/20 hover:text-white'
@@ -115,6 +173,11 @@ export function SiteHeader() {
       <AnimatePresence>
         {open && (
           <motion.div
+            id="mobile-nav-menu"
+            ref={menuRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={open ? t.header.closeMenu : t.header.openMenu}
             key="mobile-menu"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
@@ -133,6 +196,7 @@ export function SiteHeader() {
                   <Link
                     href={item.href}
                     onClick={() => setOpen(false)}
+                    aria-current={isActive(item.href) ? 'page' : undefined}
                     className={cn(
                       'flex items-center rounded-xl px-4 py-3 text-sm font-medium transition-all duration-150',
                       isActive(item.href)
