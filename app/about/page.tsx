@@ -107,7 +107,7 @@ export default function AboutPage() {
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <a
-              href={about.joinUs.linkUrl}
+              href={t.joinFormUrl}
               target="_blank"
               rel="noopener noreferrer"
               className={cn(

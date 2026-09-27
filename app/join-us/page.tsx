@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { useTranslation } from '@/components/language-provider';
 
 export default function JoinUsPage() {
@@ -85,10 +86,15 @@ export default function JoinUsPage() {
             </div>
 
             <div className="mt-8 space-y-3 border-t border-white/[0.06] pt-8">
-              <Button size="lg" className="group w-full gap-2">
+              <a
+                href={t.joinFormUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(buttonVariants({ size: 'lg' }), 'group w-full gap-2')}
+              >
                 {t.joinSection.action}
                 <ArrowLeft className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
-              </Button>
+              </a>
               <div className="flex items-center justify-center gap-2 text-xs text-brand-600">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500/70" />
                 {t.joinSection.freeToJoinNote}

@@ -74,8 +74,10 @@ export function SectionHero() {
 
               {/* CTAs */}
               <div className="flex flex-wrap items-center gap-3">
-                <Link
-                  href="/join-us"
+                <a
+                  href={t.joinFormUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={cn(
                     buttonVariants({ size: 'lg' }),
                     'group inline-flex items-center justify-center gap-2'
@@ -83,7 +85,7 @@ export function SectionHero() {
                 >
                   {t.hero.join}
                   <ArrowLeft className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
-                </Link>
+                </a>
                 <Link
                   href="/projects"
                   className={cn(

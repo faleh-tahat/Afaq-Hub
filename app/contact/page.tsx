@@ -11,11 +11,32 @@ export default function ContactPage() {
   const t = useTranslation();
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [form, setForm] = useState({ name: '', email: '', message: '' });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => { setLoading(false); setSubmitted(true); }, 900);
+    setError(null);
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'حدث خطأ غير متوقع.');
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'حدث خطأ غير متوقع.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -100,6 +121,8 @@ export default function ContactPage() {
                     <span className="text-xs font-medium text-brand-400">{t.contact.form.name}</span>
                     <input
                       type="text"
+                      value={form.name}
+                      onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                       placeholder={t.contact.form.namePlaceholder}
                       required
                       className="input-base"
@@ -109,6 +132,8 @@ export default function ContactPage() {
                     <span className="text-xs font-medium text-brand-400">{t.contact.form.email}</span>
                     <input
                       type="email"
+                      value={form.email}
+                      onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
                       placeholder={t.contact.form.emailPlaceholder}
                       required
                       className="input-base"
@@ -119,11 +144,18 @@ export default function ContactPage() {
                   <span className="text-xs font-medium text-brand-400">{t.contact.form.message}</span>
                   <textarea
                     rows={6}
+                    value={form.message}
+                    onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
                     placeholder={t.contact.form.messagePlaceholder}
                     required
                     className="input-base resize-none"
                   />
                 </label>
+                {error && (
+                  <p className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+                    {error}
+                  </p>
+                )}
                 <Button type="submit" size="lg" loading={loading} className="group gap-2 w-full">
                   {!loading && <Send className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />}
                   {t.contact.form.submit}

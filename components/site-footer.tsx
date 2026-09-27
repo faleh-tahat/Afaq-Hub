@@ -26,15 +26,17 @@ export function SiteFooter() {
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Link
-                href="/join-us"
+              <a
+                href={t.joinFormUrl}
+                target="_blank"
+                rel="noopener noreferrer"
                 className={cn(
                   buttonVariants({ variant: 'primary', size: 'sm' }),
                   'inline-flex items-center justify-center'
                 )}
               >
                 {t.footer.join}
-              </Link>
+              </a>
               <Link
                 href="/contact"
                 className={cn(
@@ -53,7 +55,7 @@ export function SiteFooter() {
               {t.footer.explore}
             </h3>
             <ul className="mt-5 space-y-3">
-              {t.navLinks.slice(0, 6).map((item) => (
+              {t.navLinks.slice(0, 5).map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}

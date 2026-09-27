@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { buttonVariants } from '@/components/ui/button';
@@ -13,27 +13,10 @@ import { cn } from '@/lib/utils';
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
   const t = useTranslation();
 
   const isActive = (href: string) =>
     href === '/' ? pathname === '/' : pathname.startsWith(href);
-
-  const scrollToId = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
-  const handleJoinClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (pathname === '/about') {
-      e.preventDefault();
-      scrollToId('join');
-    } else {
-      e.preventDefault();
-      router.push('/about#join');
-      // Fallback: if the router doesn't auto-scroll after navigation, do it manually.
-      setTimeout(() => scrollToId('join'), 400);
-    }
-  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-brand-950/90 backdrop-blur-2xl">
@@ -53,7 +36,7 @@ export function SiteHeader() {
 
         {/* Desktop Nav */}
         <nav className="hidden items-center gap-1 lg:flex">
-          {t.navLinks.slice(0, 7).map((item) => (
+          {t.navLinks.slice(0, 5).map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -67,16 +50,17 @@ export function SiteHeader() {
 
         {/* Desktop Actions */}
         <div className="hidden items-center gap-2 lg:flex">
-          <Link
-            href="/about#join"
-            onClick={handleJoinClick}
+          <a
+            href={t.joinFormUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             className={cn(
               buttonVariants({ variant: 'ghost', size: 'sm' }),
               'inline-flex items-center justify-center'
             )}
           >
             {t.header.joinUs}
-          </Link>
+          </a>
           <Link
             href="/contact"
             className={cn(
@@ -165,19 +149,18 @@ export function SiteHeader() {
               ))}
 
               <div className="mt-4 grid grid-cols-2 gap-2 pt-2 border-t border-white/[0.06]">
-                <Link
-                  href="/about#join"
-                  onClick={(e) => {
-                    setOpen(false);
-                    handleJoinClick(e);
-                  }}
+                <a
+                  href={t.joinFormUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setOpen(false)}
                   className={cn(
                     buttonVariants({ size: 'default' }),
                     'inline-flex items-center justify-center'
                   )}
                 >
                   {t.header.joinUs}
-                </Link>
+                </a>
                 <Link
                   href="/contact"
                   onClick={() => setOpen(false)}

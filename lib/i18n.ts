@@ -1,6 +1,8 @@
 export interface Translation {
   siteTitle: string;
   logoAlt: string;
+  /** Single source of truth: every "join" CTA site-wide points here. */
+  joinFormUrl: string;
   navLinks: { href: string; label: string }[];
   header: {
     joinUs: string;
@@ -43,7 +45,6 @@ export interface Translation {
       title: string;
       paragraphs: string[];
       linkLabel: string;
-      linkUrl: string;
     };
     vision: {
       kicker: string;
@@ -92,7 +93,8 @@ export interface Translation {
   gallery: {
     title: string;
     description: string;
-    items: { label: string }[];
+    /** caption is the custom text revealed on hover; falls back to label if not set. */
+    items: { label: string; image: string; caption?: string }[];
     action: string;
   };
   partners: {
@@ -166,15 +168,13 @@ export interface Translation {
 export const translation: Translation = {
   siteTitle: 'فريق AFAQ التقني',
   logoAlt: 'شعار فريق AFAQ التقني',
+  joinFormUrl: 'https://forms.gle/GMtFerf98ywD4UCX7',
   navLinks: [
     { href: '/', label: 'الرئيسية' },
     { href: '/about', label: 'من نحن' },
     { href: '/committees', label: 'اللجان' },
     { href: '/events', label: 'الفعاليات' },
     { href: '/projects', label: 'المشاريع' },
-    { href: '/news', label: 'الأخبار' },
-    { href: '/partners', label: 'الشركاء' },
-    { href: '/join-us', label: 'انضم إلينا' },
     { href: '/contact', label: 'تواصل' },
     { href: '/faq', label: 'الأسئلة' },
   ],
@@ -201,7 +201,7 @@ export const translation: Translation = {
     description:
       'نُمكّن الشباب، نُطوّر القدرات، ونبني مستقبلًا رقميًا.\n\nفريق شبابي مستقل في مجال تكنولوجيا المعلومات، يضم شبابًا ومهتمين من مختلف المحافظات الأردنية، نعمل على تمكين الشباب تقنيًا وأكاديميًا عبر التدريب، والمبادرات، والمشاريع التقنية والتطوعية، لبناء جيل رقمي مبدع وصناعة أثر حقيقي في المجتمع.',
     join: 'انضم إلى AFAQ',
-    explore: 'اكتشف تأثيرنا',
+    explore: 'اكتشف أعمالنا',
     fastFacts: 'حقائق سريعة',
     membersJoinedLabel: 'عضوًا انضموا بالفعل',
     stats: [
@@ -240,7 +240,6 @@ export const translation: Translation = {
         'إذا كنت ترى في نفسك طاقة تستحق أن تُستثمر… فآفاق مساحتك.',
       ],
       linkLabel: 'رابط الانتساب:',
-      linkUrl: 'https://forms.gle/GMtFerf98ywD4UCX7',
     },
     vision: {
       kicker: 'رؤيتنا',
@@ -334,9 +333,22 @@ export const translation: Translation = {
     title: 'لحظات بصرية من مجتمع AFAQ.',
     description: 'لمحة منتقاة من ورش العمل وفعاليات الإطلاق وتعاون المتطوعين.',
     items: [
-      { label: 'تصميم ورشة العمل' },
-      { label: 'تخطيط المتطوعين' },
-      { label: 'إطلاق المشروع' },
+      { label: 'زيارة مجلس النواب', image: '/afaq-center.jpeg' },
+      {
+        label: 'فريق آفاق التكنولوجيا يلتقي رئيس الديوان الملكي الهاشمي',
+        image: '/afaq-diwan.jpg',
+        caption:
+          'التقى فريق آفاق التكنولوجيا معالي رئيس الديوان الملكي الهاشمي العامر، في لقاء وطني استعرض خلاله الفريق مسيرته في تمكين الشباب في مجالات التكنولوجيا والتحول الرقمي، وأبرز مبادراته وإنجازاته التي وصلت إلى أكثر من 22 ألف مستفيد في مختلف محافظات المملكة.',
+      },
+      {
+        label: 'فريق آفاق التكنولوجيا يلتقي سمو الأميرة بسمة بنت طلال',
+        image: '/afaq-workshop.jpg',
+        caption:
+          'التقى فريق آفاق التكنولوجيا سمو الأميرة بسمة بنت طلال في محافظة المفرق، حيث استعرض رئيس الفريق عدنان قازان رؤية الفريق وأبرز مبادراته التقنية وخططه في تمكين الشباب في مجالات الذكاء الاصطناعي والأمن السيبراني والمهارات الرقمية.',
+      },
+      { label: 'منتدى ومؤتمر', image: '/afaq-forum.jpg' },
+      { label: 'ندوة فريق آفاق', image: '/afaq-conference.jpg' },
+      { label: 'هاكاثون المفرق للذكاء الاصطناعي 2025', image: '/afaq-hackathon.jpg' },
     ],
     action: 'عرض المعرض الكامل ←',
   },
@@ -382,9 +394,7 @@ export const translation: Translation = {
     respondsWithinLabel: 'عادةً ما نرد خلال',
     respondsWithinValue: '24 ساعة',
     details: [
-      { label: 'الاستفسارات العامة', value: 'hello@afaq-team.org' },
-      { label: 'الشراكات', value: 'partners@afaq-team.org' },
-      { label: 'الصحافة', value: 'media@afaq-team.org' },
+      { label: 'تواصل معنا', value: 'afaqteam12@gmail.com' },
     ],
     form: {
       name: 'الاسم',

@@ -1,19 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { ArrowLeft, Images } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { SectionHeading } from '@/components/ui/section-heading';
+import { GalleryTile } from '@/components/gallery-tile';
 import { useTranslation } from '@/components/language-provider';
-
-const GALLERY_GRADIENTS = [
-  'from-accent/20 via-blue-900/30 to-brand-900',
-  'from-purple-900/40 via-brand-800/30 to-brand-900',
-  'from-emerald-900/30 via-brand-800/20 to-brand-900',
-  'from-blue-900/40 via-accent/10 to-brand-900',
-  'from-rose-900/30 via-brand-800/20 to-brand-900',
-  'from-amber-900/25 via-brand-800/20 to-brand-900',
-];
 
 export function SectionGallery() {
   const t = useTranslation();
@@ -37,46 +28,7 @@ export function SectionGallery() {
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {t.gallery.items.map((item, i) => (
-            <motion.div
-              key={item.label}
-              initial={{ opacity: 0, scale: 0.97 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.4, delay: i * 0.06, ease: 'easeOut' }}
-            >
-              <div className="group relative aspect-[4/3] overflow-hidden rounded-3xl border border-white/[0.06]">
-                {/* Gradient background */}
-                <div
-                  className={`absolute inset-0 bg-gradient-to-br ${GALLERY_GRADIENTS[i % GALLERY_GRADIENTS.length]} transition-all duration-500 group-hover:scale-105`}
-                />
-
-                {/* Pattern overlay */}
-                <div
-                  className="absolute inset-0 opacity-20"
-                  style={{
-                    backgroundImage: 'radial-gradient(circle, rgba(229,236,244,0.15) 1px, transparent 1px)',
-                    backgroundSize: '20px 20px',
-                  }}
-                />
-
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-brand-950/0 transition-all duration-300 group-hover:bg-brand-950/30" />
-
-                {/* Content */}
-                <div className="absolute inset-0 flex flex-col justify-between p-6">
-                  <div className="flex justify-end">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-brand-950/60 opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100">
-                      <Images className="h-4 w-4 text-brand-300" />
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-white drop-shadow-sm">
-                      {item.label}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+            <GalleryTile key={item.label} item={item} index={i} />
           ))}
         </div>
       </div>
