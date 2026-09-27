@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import Script from 'next/script';
-import { Inter, IBM_Plex_Sans, IBM_Plex_Sans_Arabic, Fraunces } from 'next/font/google';
+import { IBM_Plex_Sans_Arabic } from 'next/font/google';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { LanguageProvider } from '@/components/language-provider';
+import { MotionProvider } from '@/components/motion-provider';
 import './globals.css';
 
 // Runs before the page paints so a hard-refresh on an inner page bounces to
@@ -21,21 +22,13 @@ const RELOAD_REDIRECT_SCRIPT = `
 })();
 `;
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
-const ibmPlexSans = IBM_Plex_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-plex',
-});
+// One family for the whole site: its Latin glyphs are IBM Plex Sans, so "AFAQ",
+// emails and numbers sit naturally inside Arabic lines.
 const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
-  subsets: ['arabic'],
+  subsets: ['arabic', 'latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-plex-arabic',
-});
-const fraunces = Fraunces({
-  subsets: ['latin'],
-  weight: ['500', '600'],
-  variable: '--font-fraunces',
+  display: 'swap',
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://afaq-team.com';
@@ -50,14 +43,7 @@ export const metadata: Metadata = {
     default: siteTitle,
   },
   description: siteDescription,
-  keywords: [
-    'تطوع',
-    'تقنية',
-    'أثر مجتمعي',
-    'تمكين الشباب',
-    'فريق تقني',
-    'AFAQ',
-  ],
+  keywords: ['تطوع', 'تقنية', 'أثر مجتمعي', 'تمكين الشباب', 'فريق تقني', 'AFAQ'],
   authors: [{ name: 'فريق AFAQ التقني' }],
   creator: 'فريق AFAQ التقني',
   publisher: 'فريق AFAQ التقني',
@@ -132,14 +118,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body
         suppressHydrationWarning
-        className={`${inter.variable} ${ibmPlexSans.variable} ${ibmPlexSansArabic.variable} ${fraunces.variable} font-sans bg-brand-950 text-brand-200`}
+        className={`${ibmPlexSansArabic.variable} bg-canvas font-sans text-ink-secondary`}
       >
         <LanguageProvider>
-          <div className="min-h-screen">
-            <SiteHeader />
-            <main>{children}</main>
-            <SiteFooter />
-          </div>
+          <MotionProvider>
+            <div className="flex min-h-screen flex-col">
+              <SiteHeader />
+              <main className="flex-1">{children}</main>
+              <SiteFooter />
+            </div>
+          </MotionProvider>
         </LanguageProvider>
       </body>
     </html>

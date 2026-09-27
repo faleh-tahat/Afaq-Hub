@@ -2,221 +2,174 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─── Base ─────────────────────────────────────────────── */
+/* ─── Design tokens ───────────────────────────────────────
+   RGB channels, consumed by tailwind.config.ts as rgb(var(--x) / alpha).
+   Accent colours come straight from the AFAQ logo mark. */
 :root {
+  --canvas: 7 9 13; /* #07090D */
+  --surface: 13 17 24; /* #0D1118 */
+  --surface-raised: 19 25 36; /* #131924 */
+  --surface-overlay: 26 33 48; /* #1A2130 */
+
+  --line: 30 39 51; /* #1E2733 */
+  --line-strong: 44 55 70; /* #2C3746 */
+  --line-input: 90 102 121; /* #5A6679: 3.25:1 on surface */
+
+  --ink: 232 237 243; /* #E8EDF3: 16.9:1 on canvas */
+  --ink-secondary: 183 193 205; /* #B7C1CD: 10.9:1 */
+  --ink-muted: 139 151 166; /* #8B97A6: 6.7:1 */
+
+  --accent: 34 215 255; /* #22D7FF: logo cyan */
+  --accent-strong: 11 120 231; /* #0B78E7: logo blue */
+  --silver: 201 208 217; /* #C9D0D9: wordmark silver */
+  --gold: 227 194 122; /* #E3C27A: royal attribution */
+  --success: 52 211 153;
+
   color-scheme: dark;
-  font-family: 'Inter', system-ui, sans-serif;
-  font-feature-settings: 'cv02' 1, 'cv03' 1, 'cv04' 1, 'ss01' 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
 }
 
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 80px;
-}
-
-body {
-  min-height: 100vh;
-  background-color: #050505;
-  color: #E5ECF4;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-::selection {
-  background: rgba(34, 215, 255, 0.2);
-  color: #ffffff;
-}
-
-/* ─── Form Elements ─────────────────────────────────────── */
-button,
-input,
-textarea,
-select {
-  font: inherit;
-}
-
-/* ─── Focus Styles ──────────────────────────────────────── */
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible {
-  outline: 2px solid #22D7FF;
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-
-/* ─── Dividers ──────────────────────────────────────────── */
-hr {
-  border: none;
-  border-top: 1px solid rgba(229, 236, 244, 0.08);
-}
-
-/* ─── Images ────────────────────────────────────────────── */
-img {
-  display: block;
-  max-width: 100%;
-}
-
-/* ─── Sections ──────────────────────────────────────────── */
-section {
-  position: relative;
-}
-
-/* ─── RTL Support ───────────────────────────────────────── */
-html[dir='rtl'] {
-  direction: rtl;
-}
-
-html[dir='rtl'] body {
-  text-align: right;
-}
-
-/* ─── Custom Scrollbar ──────────────────────────────────── */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: #050505;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(74, 82, 96, 0.6);
-  border-radius: 999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(74, 82, 96, 0.9);
-}
-
-/* ─── Utility Layer ─────────────────────────────────────── */
-@layer utilities {
-  /* Gradient text */
-  .text-gradient {
-    background: linear-gradient(135deg, #ffffff 30%, #22D7FF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
   }
 
-  .text-gradient-accent {
-    background: linear-gradient(135deg, #22D7FF 0%, #9BD8FF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  body {
+    min-height: 100vh;
+    background-color: rgb(var(--canvas));
+    color: rgb(var(--ink-secondary));
+    font-family: var(--font-plex-arabic), 'IBM Plex Sans Arabic', Tahoma, system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
   }
 
-  /* Glass surface */
-  .glass {
-    background: rgba(17, 19, 26, 0.80);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: rgb(var(--ink));
+    font-weight: 600;
+    text-wrap: balance;
   }
 
-  .glass-light {
-    background: rgba(27, 33, 43, 0.60);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+  p {
+    text-wrap: pretty;
   }
 
-  /* Shimmer skeleton */
-  .shimmer {
-    background: linear-gradient(
-      90deg,
-      rgba(44, 51, 60, 0.4) 25%,
-      rgba(74, 82, 96, 0.4) 50%,
-      rgba(44, 51, 60, 0.4) 75%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 2s linear infinite;
+  ::selection {
+    background: rgb(var(--accent) / 0.25);
+    color: rgb(var(--ink));
   }
 
-  /* Gradient border */
-  .border-gradient {
-    border: 1px solid transparent;
-    background-clip: padding-box;
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  section {
     position: relative;
   }
 
-  .border-gradient::before {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    background: linear-gradient(135deg, rgba(34,215,255,0.3), rgba(11,120,231,0.1), rgba(34,215,255,0.05));
-    z-index: -1;
+  hr {
+    border: none;
+    border-top: 1px solid rgb(var(--line));
   }
 
-  /* Arrow link animation */
-  .arrow-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
+  /* One focus style everywhere: visible, on-brand, never clipped. */
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 3px;
+    border-radius: 6px;
   }
 
-  .arrow-link .arrow-icon {
-    transition: transform 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
   }
 
-  .arrow-link:hover .arrow-icon {
-    transform: translateX(4px);
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--canvas));
   }
 
-  /* Hover lift */
-  .hover-lift {
-    transition: transform 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                box-shadow 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                border-color 250ms ease;
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--line-strong));
+    border: 3px solid rgb(var(--canvas));
+    border-radius: 999px;
   }
 
-  .hover-lift:hover {
-    transform: translateY(-3px);
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--line-input));
   }
 }
 
-/* ─── Component Layer ───────────────────────────────────── */
 @layer components {
-  /* Input base */
-  .input-base {
-    @apply w-full rounded-2xl border border-white/10 bg-brand-950/80 px-4 py-3 text-sm text-brand-100
-           placeholder:text-brand-600 transition-all duration-200
-           focus:border-accent/40 focus:outline-none focus:ring-2 focus:ring-accent/10;
+  /* Form controls */
+  .field {
+    @apply block w-full rounded-control border border-line-input/70 bg-canvas px-4 text-body text-ink
+      transition-[border-color,box-shadow,background-color] duration-200 ease-brand
+      placeholder:text-ink-muted/80
+      hover:border-line-input
+      focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/15;
   }
 
-  /* Nav link with animated underline */
-  .nav-link {
-    @apply relative text-sm text-brand-400 transition-colors duration-200 hover:text-white;
+  .field:not(textarea) {
+    @apply h-12;
   }
 
-  .nav-link::after {
-    content: '';
-    @apply absolute -bottom-0.5 left-0 h-px w-0 bg-accent transition-all duration-300;
+  textarea.field {
+    @apply py-3;
   }
 
-  .nav-link:hover::after,
-  .nav-link[data-active='true']::after {
-    @apply w-full;
+  .field-label {
+    @apply mb-2 block text-small font-medium text-ink;
   }
 
-  .nav-link[data-active='true'] {
-    @apply text-white;
-  }
-
-  /* Section divider */
-  .section-divider {
-    @apply border-t border-white/[0.06];
+  /* Short kicker line placed before section labels (logical side, so RTL-aware). */
+  .kicker-rule {
+    @apply inline-block h-px w-6 shrink-0 bg-accent/60;
   }
 }
 
-/* ─── Reduced Motion ────────────────────────────────────── */
+@layer utilities {
+  /* Headline gradient that echoes the logo: soft white into the mark's cyan. */
+  .text-gradient {
+    background-image: linear-gradient(
+      100deg,
+      rgb(var(--accent)) 0%,
+      rgb(var(--ink)) 55%,
+      rgb(var(--ink)) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Circuit-line texture drawn from the logo's "A" mark. */
+  .bg-circuit {
+    /* Traces run across tile edges, so the repeat reads as one continuous board. */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' fill='none' stroke='%2322D7FF' stroke-opacity='0.12' stroke-width='1'%3E%3Cpath d='M0 24h26l12 12v22M96 70H68L56 58V40M70 0v14l10 10h16M70 96v-8l-8-8H48'/%3E%3Ccircle cx='38' cy='61' r='3'/%3E%3Ccircle cx='56' cy='37' r='3'/%3E%3Ccircle cx='45' cy='80' r='3'/%3E%3C/svg%3E");
+    background-size: 96px 96px;
+  }
+}
+
+/* ─── Reduced motion ─────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {
