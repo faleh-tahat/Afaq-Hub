@@ -35,7 +35,7 @@ export default function EventsPage() {
                   <div className="flex-1 space-y-4">
                     <div className="inline-flex items-center gap-2 rounded-xl border border-accent/15 bg-accent/6 px-3 py-1.5">
                       <Calendar className="h-3.5 w-3.5 text-accent/60" />
-                      <p className="text-2xs font-semibold uppercase tracking-widest-2 text-accent/80">
+                      <p className="text-2xs font-semibold text-accent/80">
                         {event.date}
                       </p>
                     </div>
@@ -69,7 +69,7 @@ export default function EventsPage() {
           className="mt-16 overflow-hidden rounded-4xl border border-white/[0.08] bg-gradient-to-br from-brand-800/50 to-brand-950 p-10 text-center shadow-glow sm:p-14"
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
-          <p className="text-xs font-semibold uppercase tracking-widest-3 text-accent/70">
+          <p className="text-xs font-semibold text-accent/70">
             {t.events.stayConnectedTitle}
           </p>
           <h2 className="mt-4 text-2xl font-semibold text-white sm:text-3xl">

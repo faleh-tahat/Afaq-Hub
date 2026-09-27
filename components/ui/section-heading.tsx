@@ -11,6 +11,8 @@ interface SectionHeadingProps {
   labelClassName?: string;
 }
 
+const ARABIC_RE = /[؀-ۿ]/;
+
 export function SectionHeading({
   title,
   description,
@@ -22,6 +24,11 @@ export function SectionHeading({
 }: SectionHeadingProps) {
   const isCenter = align === 'center';
   const isLg = size === 'lg';
+  // The kicker defaults to the Latin "AFAQ" wordmark but callers (e.g. the
+  // About page) also pass Arabic kickers ("مسيرتنا", "الانتساب"...). Tracking
+  // and uppercase only make sense for the Latin case, so detect rather than
+  // ask every caller to remember to opt out.
+  const isArabicLabel = ARABIC_RE.test(label);
 
   return (
     <div
@@ -36,7 +43,8 @@ export function SectionHeading({
           <span className="h-px w-8 bg-accent/40" />
           <p
             className={cn(
-              'text-xs font-semibold uppercase tracking-widest-3 text-accent/80',
+              'text-xs font-semibold text-accent/80',
+              isArabicLabel ? 'tracking-normal' : 'uppercase tracking-widest-3',
               labelClassName
             )}
           >

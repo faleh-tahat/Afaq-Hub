@@ -5,7 +5,7 @@
 /* ─── Base ─────────────────────────────────────────────── */
 :root {
   color-scheme: dark;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--font-plex-arabic), var(--font-sans), system-ui, sans-serif;
   font-feature-settings: 'cv02' 1, 'cv03' 1, 'cv04' 1, 'ss01' 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -197,7 +197,7 @@ html[dir='rtl'] body {
 
   .nav-link::after {
     content: '';
-    @apply absolute -bottom-0.5 left-0 h-px w-0 bg-accent transition-all duration-300;
+    @apply absolute -bottom-0.5 start-0 h-px w-0 bg-accent transition-all duration-300;
   }
 
   .nav-link:hover::after,

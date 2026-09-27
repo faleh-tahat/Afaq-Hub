@@ -47,7 +47,7 @@ export default function ProjectsPage() {
                 className={`group flex h-full flex-col justify-between gap-8 border-t-2 p-7 ${CARD_ACCENTS[i % CARD_ACCENTS.length]}`}
               >
                 <div className="space-y-4">
-                  <p className="text-2xs font-bold uppercase tracking-widest-3 text-accent/70">
+                  <p className="text-2xs font-bold text-accent/70">
                     {project.category}
                   </p>
                   <h2 className="text-xl font-semibold leading-snug text-white">

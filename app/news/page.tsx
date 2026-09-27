@@ -35,7 +35,7 @@ export default function NewsPage() {
               transition={{ duration: 0.4, delay: 0.1 + i * 0.07 }}
             >
               <Card className="group p-7">
-                <p className="text-2xs font-semibold uppercase tracking-widest-3 text-brand-600">
+                <p className="text-2xs font-semibold text-brand-600">
                   {item.date}
                 </p>
                 <h2 className="mt-4 text-lg font-semibold leading-snug text-white transition-colors group-hover:text-accent/90">

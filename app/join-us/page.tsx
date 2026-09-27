@@ -37,7 +37,7 @@ export default function JoinUsPage() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="space-y-4"
           >
-            <p className="text-xs font-bold uppercase tracking-widest-3 text-brand-500">
+            <p className="text-xs font-bold text-brand-500">
               {t.joinSection.openRolesLabel}
             </p>
             {t.joinSection.roles.map((role, i) => (
@@ -62,7 +62,7 @@ export default function JoinUsPage() {
             transition={{ duration: 0.5, delay: 0.15 }}
             className="rounded-4xl border border-white/[0.08] bg-brand-900/60 p-8 shadow-card backdrop-blur-xl sm:p-10"
           >
-            <p className="text-xs font-bold uppercase tracking-widest-3 text-brand-500">
+            <p className="text-xs font-bold text-brand-500">
               {t.joinSection.processTitle}
             </p>
 

@@ -24,7 +24,7 @@ export default function NotFound() {
       >
         {/* 404 display */}
         <div className="space-y-4">
-          <p className="text-xs font-bold uppercase tracking-widest-4 text-accent/60">
+          <p className="text-xs font-bold text-accent/60">
             {t.notFound.title}
           </p>
           <h1 className="text-gradient text-[7rem] font-semibold leading-none tracking-tight sm:text-[10rem]">

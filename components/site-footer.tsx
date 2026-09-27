@@ -18,7 +18,7 @@ export function SiteFooter() {
           {/* Brand Column */}
           <div className="space-y-6">
             <div>
-              <p className="text-xs font-bold uppercase tracking-widest-3 text-accent/70">
+              <p className="text-xs font-bold text-accent/70">
                 {t.siteTitle}
               </p>
               <p className="mt-3 max-w-sm text-sm leading-7 text-brand-500">
@@ -51,7 +51,7 @@ export function SiteFooter() {
 
           {/* Explore Column */}
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-widest-3 text-brand-300">
+            <h3 className="text-xs font-bold text-brand-300">
               {t.footer.explore}
             </h3>
             <ul className="mt-5 space-y-3">
@@ -70,7 +70,7 @@ export function SiteFooter() {
 
           {/* Legal Column */}
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-widest-3 text-brand-300">
+            <h3 className="text-xs font-bold text-brand-300">
               {t.footer.legal}
             </h3>
             <ul className="mt-5 space-y-3">

@@ -65,7 +65,7 @@ export default function ContactPage() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="rounded-4xl border border-white/[0.08] bg-brand-900/60 p-8 shadow-card backdrop-blur-xl sm:p-10"
           >
-            <p className="text-xs font-bold uppercase tracking-widest-3 text-brand-500">
+            <p className="text-xs font-bold text-brand-500">
               {t.contact.getInTouch}
             </p>
             <div className="mt-6 space-y-5">
@@ -74,7 +74,7 @@ export default function ContactPage() {
                   key={detail.label}
                   className="rounded-2xl border border-white/[0.06] bg-brand-950/40 px-5 py-4"
                 >
-                  <p className="text-2xs font-semibold uppercase tracking-widest-2 text-brand-600">
+                  <p className="text-2xs font-semibold text-brand-600">
                     {detail.label}
                   </p>
                   <p className="mt-1.5 text-sm font-medium text-brand-200">{detail.value}</p>

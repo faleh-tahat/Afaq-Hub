@@ -16,9 +16,13 @@ const badgeVariants = cva(
         muted:    'bg-brand-800/60 text-brand-400 border border-white/6',
       },
       size: {
-        sm:      'px-2 py-0.5 text-2xs tracking-widest-2',
-        default: 'px-3 py-1   text-xs  tracking-widest-2',
-        lg:      'px-4 py-1.5 text-xs  tracking-widest-2',
+        // No letter-spacing/uppercase by default: badges commonly hold
+        // Arabic text on this site, and tracking breaks connected script
+        // while case has no meaning for it. Callers with Latin-only content
+        // (e.g. an acronym) can opt in via className="uppercase tracking-widest-2".
+        sm:      'px-2 py-0.5 text-2xs',
+        default: 'px-3 py-1   text-xs',
+        lg:      'px-4 py-1.5 text-xs',
       },
     },
     defaultVariants: {
@@ -39,7 +43,7 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     return (
       <span
         ref={ref}
-        className={cn(badgeVariants({ variant, size }), 'uppercase', className)}
+        className={cn(badgeVariants({ variant, size }), className)}
         {...props}
       >
         {dot && (

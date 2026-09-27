@@ -33,7 +33,7 @@ export default function PartnersPage() {
             >
               <div className="group relative flex flex-col items-center justify-center gap-3 overflow-hidden rounded-2xl border border-white/[0.06] bg-brand-900/40 px-6 py-10 text-center transition-all duration-300 hover:border-white/[0.14] hover:bg-brand-900/70 hover:-translate-y-0.5 hover:shadow-card">
                 <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/0 to-accent/0 opacity-0 transition-opacity duration-300 group-hover:from-accent/4 group-hover:to-transparent group-hover:opacity-100" />
-                <p className="relative text-xs font-semibold uppercase tracking-widest-3 text-brand-600 transition-colors duration-200 group-hover:text-accent/60">
+                <p className="relative text-xs font-semibold text-brand-600 transition-colors duration-200 group-hover:text-accent/60">
                   {t.partners.itemLabel}
                 </p>
                 <h3 className="relative text-base font-semibold text-brand-300 transition-colors duration-200 group-hover:text-white">

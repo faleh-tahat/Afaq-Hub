@@ -75,7 +75,7 @@ export default function AboutPage() {
               >
                 <div className="absolute left-0 top-1 h-3.5 w-3.5 rounded-full border-2 border-brand-950 bg-brand-700" />
 
-                <p className="text-2xs font-bold uppercase tracking-widest-3 text-accent/70">
+                <p className="text-2xs font-bold text-accent/70">
                   {item.year} — {item.title}
                 </p>
                 <p className="mt-1.5 text-sm leading-6 text-brand-500">

@@ -9,15 +9,19 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          950: '#050505',
-          900: '#11131A',
-          800: '#1B212B',
-          700: '#2C333C',
+          // 950-700 double as the elevation scale (base -> surface -> raised
+          // -> overlay): each step is a deliberate, slightly lifted tone
+          // rather than a flat near-black, so sections/cards separate
+          // through tone instead of relying on borders/glow alone.
+          950: '#08090C', // base
+          900: '#101216', // surface
+          800: '#171A21', // raised
+          700: '#1E222B', // overlay
           600: '#4A5260',
           500: '#9BD8FF',
-          400: '#B9C2CE',
+          400: '#AFB7C4', // secondary text, tuned for 4.5:1 on 950/900
           300: '#E5ECF4',
-          200: '#F1F5F9',
+          200: '#EDEFF2', // primary text: soft off-white, not pure #fff
           100: '#F8FBFE',
         },
         accent: {
@@ -34,14 +38,6 @@ const config: Config = {
           muted:   '#0D1016',
           raised:  '#1B212B',
         },
-        impact: {
-          bg:      '#0b0c0e',
-          panel:   '#101215',
-          divider: 'rgba(242,240,236,0.10)',
-          text:    '#f2f0ec',
-          muted:   '#8c8a86',
-          accent:  '#4f8ef7',
-        },
       },
       boxShadow: {
         'glow':    '0 0 0 1px rgba(34,215,255,0.08), 0 24px 80px rgba(34,215,255,0.12)',
@@ -52,7 +48,12 @@ const config: Config = {
         'card-hover': '0 4px 16px rgba(0,0,0,0.28), 0 24px 64px rgba(34,215,255,0.08)',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        // IBM Plex Sans Arabic is primary: it's what actually has Arabic
+        // glyphs. `var(--font-sans)` (Inter, loaded via next/font) is the
+        // fallback for Latin-only runs (numbers, emails, "AFAQ"), and is
+        // referenced through its CSS variable rather than hardcoded so the
+        // font next/font actually loaded is what's used.
+        sans: ['var(--font-plex-arabic)', 'var(--font-sans)', 'system-ui', 'sans-serif'],
         plex: ['var(--font-plex)', 'IBM Plex Sans', 'system-ui', 'sans-serif'],
         'plex-arabic': ['var(--font-plex-arabic)', 'IBM Plex Sans Arabic', 'Tahoma', 'sans-serif'],
         fraunces: ['var(--font-fraunces)', 'ui-serif', 'Georgia', 'serif'],
@@ -79,7 +80,7 @@ const config: Config = {
         'accent-gradient': 'linear-gradient(135deg, #22D7FF 0%, #0B78E7 100%)',
         'surface-gradient': 'linear-gradient(180deg, rgba(27,33,43,0.8) 0%, rgba(17,19,26,0.9) 100%)',
         'dot-grid': 'radial-gradient(circle, rgba(229,236,244,0.06) 1px, transparent 1px)',
-        'impact-glow': 'linear-gradient(90deg, transparent 0%, #4f8ef7 50%, transparent 100%)',
+        'accent-line': 'linear-gradient(90deg, transparent 0%, #22D7FF 50%, transparent 100%)',
       },
       backgroundSize: {
         'dot-grid': '24px 24px',

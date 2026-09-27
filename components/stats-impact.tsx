@@ -94,16 +94,16 @@ function StatColumn({ stat, index }: { stat: StatItem; index: number }) {
       className={cn(
         'relative flex flex-col items-center justify-center gap-2 px-6 py-8 text-center outline-none transition-colors duration-200',
         'hover:bg-white/[0.02] focus-visible:bg-white/[0.02]',
-        'focus-visible:outline focus-visible:outline-2 focus-visible:outline-impact-accent focus-visible:outline-offset-[-2px]',
-        'border-impact-divider',
+        'focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-[-2px]',
+        'border-white/10',
         DIVIDER_CLASSES[index % DIVIDER_CLASSES.length]
       )}
     >
-      <p className="font-fraunces text-4xl font-semibold tabular-nums text-impact-accent sm:text-5xl">
+      <p className="font-fraunces text-4xl font-semibold tabular-nums text-accent sm:text-5xl">
         {display}
         {stat.suffix}
       </p>
-      <p className="font-plex-arabic text-sm leading-6 text-impact-muted">{stat.label}</p>
+      <p className="font-plex-arabic text-sm leading-6 text-brand-400">{stat.label}</p>
     </div>
   );
 }
@@ -123,11 +123,11 @@ export function StatsImpact({
         transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="mb-8 text-center"
       >
-        <h2 className="font-fraunces text-[32px] font-semibold text-impact-text sm:text-[38px]">
+        <h2 className="font-plex-arabic text-[32px] font-semibold text-brand-200 sm:text-[38px]">
           {title}
         </h2>
         {subtitle && (
-          <p className="mt-3 font-plex-arabic text-sm text-impact-muted sm:text-base">
+          <p className="mt-3 font-plex-arabic text-sm text-brand-400 sm:text-base">
             {subtitle}
           </p>
         )}
@@ -138,10 +138,10 @@ export function StatsImpact({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-40px' }}
         transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="relative rounded-2xl border border-impact-divider bg-impact-panel"
+        className="relative rounded-2xl border border-white/10 bg-brand-900"
       >
         {/* Top gradient hairline: transparent -> accent -> transparent */}
-        <div className="absolute inset-x-0 top-0 h-px rounded-t-2xl bg-impact-glow opacity-50" />
+        <div className="absolute inset-x-0 top-0 h-px rounded-t-2xl bg-accent-line opacity-50" />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat, i) => (
