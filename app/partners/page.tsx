@@ -1,49 +1,35 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { SectionHeading } from '@/components/ui/section-heading';
+import { PageHeader } from '@/components/ui/page-header';
+import { Container } from '@/components/ui/container';
+import { Reveal } from '@/components/ui/reveal';
 import { useTranslation } from '@/components/language-provider';
 
 export default function PartnersPage() {
   const t = useTranslation();
 
   return (
-    <div className="min-h-screen bg-brand-950 text-brand-200">
-      <main className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-2xl"
-        >
-          <SectionHeading
-            title={t.partners.title}
-            description={t.partners.description}
-            size="lg"
-          />
-        </motion.div>
+    <div>
+      <PageHeader title={t.partners.title} description={t.partners.description} />
 
-        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <Container className="py-14 sm:py-20">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
           {t.partners.list.map((partner, i) => (
-            <motion.div
-              key={partner}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: 0.1 + i * 0.05 }}
-            >
-              <div className="group relative flex flex-col items-center justify-center gap-3 overflow-hidden rounded-2xl border border-white/[0.06] bg-brand-900/40 px-6 py-10 text-center transition-all duration-300 hover:border-white/[0.14] hover:bg-brand-900/70 hover:-translate-y-0.5 hover:shadow-card">
-                <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/0 to-accent/0 opacity-0 transition-opacity duration-300 group-hover:from-accent/4 group-hover:to-transparent group-hover:opacity-100" />
-                <p className="relative text-xs font-semibold uppercase tracking-widest-3 text-brand-600 transition-colors duration-200 group-hover:text-accent/60">
+            <Reveal key={partner} delay={i * 0.05} className="h-full">
+              <div className="relative flex h-full min-h-[10rem] flex-col items-center justify-center gap-2 overflow-hidden rounded-card border border-line bg-surface px-6 py-10 text-center">
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 bg-circuit opacity-40 [mask-image:radial-gradient(closest-side,black,transparent)]"
+                />
+                <p className="relative text-caption font-medium text-ink-muted">
                   {t.partners.itemLabel}
                 </p>
-                <h3 className="relative text-base font-semibold text-brand-300 transition-colors duration-200 group-hover:text-white">
-                  {partner}
-                </h3>
+                <h2 className="relative text-title-3 font-semibold text-ink">{partner}</h2>
               </div>
-            </motion.div>
+            </Reveal>
           ))}
         </div>
-      </main>
+      </Container>
     </div>
   );
 }

@@ -1,60 +1,73 @@
 'use client';
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
-import { SectionHeading } from '@/components/ui/section-heading';
+import { PageHeader } from '@/components/ui/page-header';
+import { Container } from '@/components/ui/container';
+import { Reveal } from '@/components/ui/reveal';
 import { useTranslation } from '@/components/language-provider';
 import { cn } from '@/lib/utils';
 
 function FAQItem({ question, answer, index }: { question: string; answer: string; index: number }) {
   const [open, setOpen] = useState(false);
+  const id = useId();
+  const buttonId = `${id}-question`;
+  const panelId = `${id}-answer`;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, delay: 0.1 + index * 0.05 }}
-    >
+    <Reveal delay={index * 0.05}>
       <div
         className={cn(
-          'overflow-hidden rounded-2xl border transition-all duration-250',
+          'overflow-hidden rounded-card border transition-colors duration-200',
           open
-            ? 'border-accent/20 bg-brand-900/80'
-            : 'border-white/[0.06] bg-brand-900/40 hover:border-white/[0.10]'
+            ? 'border-accent/30 bg-surface-raised'
+            : 'border-line bg-surface hover:border-line-strong'
         )}
       >
-        <button
-          type="button"
-          onClick={() => setOpen(!open)}
-          className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
-          aria-expanded={open}
-        >
-          <span className="text-sm font-semibold text-white">{question}</span>
-          <ChevronDown
-            className={cn(
-              'h-4 w-4 shrink-0 text-brand-500 transition-transform duration-250',
-              open && 'rotate-180 text-accent'
-            )}
-          />
-        </button>
+        <h2>
+          <button
+            id={buttonId}
+            type="button"
+            onClick={() => setOpen(!open)}
+            className="flex min-h-[3.75rem] w-full items-center justify-between gap-4 px-5 py-4 text-start sm:px-6"
+            aria-expanded={open}
+            aria-controls={panelId}
+          >
+            <span className="text-body font-semibold text-ink">{question}</span>
+            <span
+              aria-hidden="true"
+              className={cn(
+                'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-colors duration-200',
+                open ? 'border-accent/40 text-accent' : 'border-line-strong text-ink-muted'
+              )}
+            >
+              <ChevronDown
+                className={cn('h-4 w-4 transition-transform duration-200', open && 'rotate-180')}
+              />
+            </span>
+          </button>
+        </h2>
 
         <AnimatePresence initial={false}>
           {open && (
             <motion.div
               key="answer"
+              id={panelId}
+              role="region"
+              aria-labelledby={buttonId}
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
               className="overflow-hidden"
             >
-              <p className="px-6 pb-5 text-sm leading-7 text-brand-500">{answer}</p>
+              <p className="px-5 pb-5 text-body text-ink-secondary sm:px-6">{answer}</p>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-    </motion.div>
+    </Reveal>
   );
 }
 
@@ -62,31 +75,16 @@ export default function FAQPage() {
   const t = useTranslation();
 
   return (
-    <div className="min-h-screen bg-brand-950 text-brand-200">
-      <main className="mx-auto max-w-4xl px-6 py-24 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <SectionHeading
-            title={t.faq.title}
-            description={t.faq.description}
-            size="lg"
-          />
-        </motion.div>
+    <div>
+      <PageHeader title={t.faq.title} description={t.faq.description} />
 
-        <div className="mt-14 space-y-3">
+      <Container className="py-14 sm:py-20">
+        <div className="mx-auto max-w-3xl space-y-3">
           {t.faq.items.map((item, i) => (
-            <FAQItem
-              key={item.question}
-              question={item.question}
-              answer={item.answer}
-              index={i}
-            />
+            <FAQItem key={item.question} question={item.question} answer={item.answer} index={i} />
           ))}
         </div>
-      </main>
+      </Container>
     </div>
   );
 }

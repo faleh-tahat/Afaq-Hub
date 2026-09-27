@@ -1,15 +1,13 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { type LucideIcon } from 'lucide-react';
+import { Reveal } from '@/components/ui/reveal';
 import { cn } from '@/lib/utils';
 
 export interface CommitteeCardItem {
   icon: LucideIcon;
   title: string;
   description: string;
-  bg: string;
-  textColor?: string;
 }
 
 export function CommitteeCards({
@@ -20,67 +18,33 @@ export function CommitteeCards({
   className?: string;
 }) {
   return (
-    <div dir="rtl" className={cn('grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3', className)}>
+    <div
+      dir="rtl"
+      className={cn('grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3', className)}
+    >
       {items.map((item, i) => {
         const Icon = item.icon;
-        const color = item.textColor ?? '#ffffff';
 
         return (
-          <motion.div
-            key={item.title}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.4, delay: i * 0.06, ease: 'easeOut' }}
-          >
-            <div
-              className="group relative flex h-full flex-col gap-4 overflow-hidden rounded-3xl px-7 py-8 text-right shadow-[0_1px_2px_rgba(0,0,0,0.15)] transition-all duration-300 ease-smooth hover:-translate-y-1.5 hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.45)]"
-              style={{ backgroundColor: item.bg, color }}
-            >
-              {/* Diagonal texture — shifts on hover for a subtle shimmer */}
+          <Reveal key={item.title} delay={(i % 3) * 0.06} className="h-full">
+            <article className="relative flex h-full flex-col overflow-hidden rounded-card border border-line bg-surface p-6 sm:p-7">
+              {/* Faint circuit texture in the corner, echoing the logo mark */}
               <div
-                className="pointer-events-none absolute inset-0 opacity-[0.06] transition-all duration-700 ease-smooth group-hover:opacity-[0.12] group-hover:[background-position:16px_16px]"
-                style={{
-                  backgroundImage:
-                    'repeating-linear-gradient(135deg, currentColor 0px, currentColor 1.5px, transparent 1.5px, transparent 16px)',
-                  backgroundPosition: '0 0',
-                }}
+                aria-hidden="true"
+                className="pointer-events-none absolute -end-6 -top-6 h-40 w-40 bg-circuit opacity-70 [mask-image:radial-gradient(closest-side,black,transparent)]"
               />
 
-              {/* Corner glow */}
-              <div
-                className="pointer-events-none absolute -top-10 -left-10 h-32 w-32 rounded-full opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-25"
-                style={{ backgroundColor: color }}
-              />
-
-              {/* Inner highlight ring on hover */}
-              <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/0 transition-all duration-300 group-hover:ring-white/15" />
-
-              <div
-                className="relative inline-flex h-14 w-14 items-center justify-center self-start rounded-2xl transition-all duration-300 ease-smooth group-hover:scale-110 group-hover:-rotate-6"
-                style={{ backgroundColor: `${color}1a` }}
+              <span
+                aria-hidden="true"
+                className="relative flex h-12 w-12 items-center justify-center rounded-control bg-accent/10 text-accent ring-1 ring-inset ring-accent/25"
               >
-                <Icon
-                  className="h-7 w-7 transition-transform duration-300 ease-smooth"
-                  strokeWidth={1.5}
-                  style={{ color }}
-                />
-              </div>
+                <Icon className="h-6 w-6" strokeWidth={1.6} />
+              </span>
 
-              <div className="relative space-y-2.5">
-                <h3 className="inline-block text-lg font-bold sm:text-xl">
-                  {item.title}
-                  <span
-                    className="mt-1 block h-0.5 w-0 rounded-full transition-all duration-300 ease-smooth group-hover:w-full"
-                    style={{ backgroundColor: color }}
-                  />
-                </h3>
-                <p className="text-sm leading-7 opacity-85 transition-opacity duration-300 group-hover:opacity-100">
-                  {item.description}
-                </p>
-              </div>
-            </div>
-          </motion.div>
+              <h2 className="relative mt-6 text-title-3 font-semibold text-ink">{item.title}</h2>
+              <p className="relative mt-3 text-body text-ink-secondary">{item.description}</p>
+            </article>
+          </Reveal>
         );
       })}
     </div>

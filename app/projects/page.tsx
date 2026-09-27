@@ -1,76 +1,49 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
 import { Card } from '@/components/ui/card';
-import { SectionHeading } from '@/components/ui/section-heading';
+import { PageHeader } from '@/components/ui/page-header';
+import { Container } from '@/components/ui/container';
+import { Reveal } from '@/components/ui/reveal';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/components/language-provider';
-
-const CARD_ACCENTS = [
-  'border-t-accent/30',
-  'border-t-blue-500/30',
-  'border-t-purple-500/30',
-];
 
 export default function ProjectsPage() {
   const t = useTranslation();
 
   return (
-    <div className="min-h-screen bg-brand-950 text-brand-200">
-      <main className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-2xl"
-        >
-          <SectionHeading
-            title={t.projects.title}
-            description={t.projects.description}
-            size="lg"
-          />
-        </motion.div>
+    <div>
+      <PageHeader title={t.projects.title} description={t.projects.description} />
 
-        <div className="mt-14 grid gap-6 lg:grid-cols-3">
+      <Container className="py-14 sm:py-20">
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           {t.projects.items.map((project, i) => (
-            <motion.div
-              key={project.title}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 + i * 0.08 }}
-              className="h-full"
-            >
-              <Card
-                className={`group flex h-full flex-col justify-between gap-8 border-t-2 p-7 ${CARD_ACCENTS[i % CARD_ACCENTS.length]}`}
-              >
-                <div className="space-y-4">
-                  <p className="text-2xs font-bold uppercase tracking-widest-3 text-accent/70">
-                    {project.category}
-                  </p>
-                  <h2 className="text-xl font-semibold leading-snug text-white">
-                    {project.title}
-                  </h2>
-                  <p className="text-sm leading-6 text-brand-500">{project.subtitle}</p>
-                </div>
+            <Reveal key={project.title} delay={i * 0.06} className="h-full">
+              <Card className="relative flex h-full flex-col overflow-hidden">
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-x-0 top-0 h-px bg-accent-hairline opacity-70"
+                />
 
-                <Link
-                  href="/contact"
-                  className={cn(
-                    buttonVariants({ variant: 'secondary', size: 'sm' }),
-                    'group/btn inline-flex w-full items-center justify-center gap-2'
-                  )}
-                >
-                  {t.projects.action}
-                  <ArrowUpRight className="h-3.5 w-3.5 opacity-60 transition-all duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 group-hover/btn:opacity-100" />
-                </Link>
+                <p className="text-small font-semibold text-accent">{project.category}</p>
+                <h2 className="mt-3 text-title-3 font-semibold text-ink">{project.title}</h2>
+                <p className="mt-3 text-body text-ink-secondary">{project.subtitle}</p>
+
+                <div className="mt-auto pt-8">
+                  {/* The label already ends in an arrow, so no icon is added. */}
+                  <Link
+                    href="/contact"
+                    className={cn(buttonVariants({ variant: 'secondary' }), 'w-full')}
+                  >
+                    {t.projects.action}
+                  </Link>
+                </div>
               </Card>
-            </motion.div>
+            </Reveal>
           ))}
         </div>
-      </main>
+      </Container>
     </div>
   );
 }
