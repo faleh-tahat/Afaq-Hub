@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { motion, animate, useReducedMotion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { animate, useReducedMotion } from 'framer-motion';
+import { Reveal } from '@/components/ui/reveal';
 
 export interface StatItem {
   /** Numeric target the count-up animates to (e.g. 24, 10, 80, 140). */
@@ -71,39 +71,21 @@ function useCountUp(target: number, { threshold = 0.4 }: { threshold?: number } 
   return { ref, display };
 }
 
-// Per-index border sides: mobile stacks with a top hairline; tablet is a 2x2
-// grid needing a mix of top + start dividers; desktop is one row of start
-// dividers only. Each breakpoint sets its own sides explicitly to avoid two
-// classes fighting over the same property at the same breakpoint.
-const DIVIDER_CLASSES = [
-  '',
-  'border-t sm:border-t-0 sm:border-s lg:border-t-0 lg:border-s',
-  'border-t sm:border-t lg:border-t-0 lg:border-s',
-  'border-t sm:border-t sm:border-s lg:border-t-0 lg:border-s',
-];
-
-function StatColumn({ stat, index }: { stat: StatItem; index: number }) {
+function StatColumn({ stat }: { stat: StatItem }) {
   const { ref, display } = useCountUp(stat.value);
 
   return (
     <div
       ref={ref}
-      tabIndex={0}
       role="group"
       aria-label={`${stat.label}: ${stat.value}${stat.suffix ?? ''}`}
-      className={cn(
-        'relative flex flex-col items-center justify-center gap-2 px-6 py-8 text-center outline-none transition-colors duration-200',
-        'hover:bg-white/[0.02] focus-visible:bg-white/[0.02]',
-        'focus-visible:outline focus-visible:outline-2 focus-visible:outline-impact-accent focus-visible:outline-offset-[-2px]',
-        'border-impact-divider',
-        DIVIDER_CLASSES[index % DIVIDER_CLASSES.length]
-      )}
+      className="flex flex-col items-center justify-center gap-2 bg-surface px-4 py-8 text-center sm:py-10"
     >
-      <p className="font-fraunces text-4xl font-semibold tabular-nums text-impact-accent sm:text-5xl">
+      <p className="text-[2.25rem] font-semibold leading-none text-ink tabular-nums sm:text-5xl">
         {display}
-        {stat.suffix}
+        <span className="text-accent">{stat.suffix}</span>
       </p>
-      <p className="font-plex-arabic text-sm leading-6 text-impact-muted">{stat.label}</p>
+      <p className="text-small text-ink-muted">{stat.label}</p>
     </div>
   );
 }
@@ -116,39 +98,25 @@ export function StatsImpact({
 }: StatsImpactProps) {
   return (
     <div dir="rtl" className={className}>
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="mb-8 text-center"
-      >
-        <h2 className="font-fraunces text-[32px] font-semibold text-impact-text sm:text-[38px]">
-          {title}
-        </h2>
-        {subtitle && (
-          <p className="mt-3 font-plex-arabic text-sm text-impact-muted sm:text-base">
-            {subtitle}
-          </p>
-        )}
-      </motion.div>
+      <Reveal className="mb-8 text-center">
+        <h2 className="text-title-2 font-semibold text-ink">{title}</h2>
+        {subtitle && <p className="mt-2 text-body text-ink-muted">{subtitle}</p>}
+      </Reveal>
 
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="relative rounded-2xl border border-impact-divider bg-impact-panel"
+      <Reveal
+        delay={0.08}
+        className="relative overflow-hidden rounded-panel border border-line bg-line"
       >
-        {/* Top gradient hairline: transparent -> accent -> transparent */}
-        <div className="absolute inset-x-0 top-0 h-px rounded-t-2xl bg-impact-glow opacity-50" />
+        {/* Logo-gradient hairline along the top edge */}
+        <div aria-hidden="true" className="absolute inset-x-0 top-0 z-10 h-px bg-accent-hairline" />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat, i) => (
-            <StatColumn key={stat.label} stat={stat} index={i} />
+        {/* gap-px over a line-coloured background draws the dividers in every layout */}
+        <div className="grid grid-cols-2 gap-px lg:grid-cols-4">
+          {stats.map((stat) => (
+            <StatColumn key={stat.label} stat={stat} />
           ))}
         </div>
-      </motion.div>
+      </Reveal>
     </div>
   );
 }
