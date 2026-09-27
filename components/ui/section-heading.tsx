@@ -5,18 +5,40 @@ interface SectionHeadingProps {
   title: string;
   description?: string;
   label?: string;
-  align?: 'left' | 'center';
+  align?: 'start' | 'center';
   size?: 'default' | 'lg';
+  as?: 'h1' | 'h2';
   className?: string;
   labelClassName?: string;
+}
+
+const LATIN_ONLY = /^[\x20-\x7E]+$/;
+
+export function SectionKicker({ label, className }: { label: string; className?: string }) {
+  // Letter-spacing suits Latin labels such as "AFAQ" but breaks connected
+  // Arabic script, so it is only applied to Latin-only text.
+  const latin = LATIN_ONLY.test(label);
+  return (
+    <p
+      className={cn(
+        'flex items-center gap-3 font-semibold text-accent',
+        latin ? 'text-caption uppercase tracking-[0.18em]' : 'text-small',
+        className
+      )}
+    >
+      <span aria-hidden="true" className="kicker-rule" />
+      {label}
+    </p>
+  );
 }
 
 export function SectionHeading({
   title,
   description,
   label = 'AFAQ',
-  align = 'left',
+  align = 'start',
   size = 'default',
+  as: Heading = 'h2',
   className,
   labelClassName,
 }: SectionHeadingProps) {
@@ -24,47 +46,30 @@ export function SectionHeading({
   const isLg = size === 'lg';
 
   return (
-    <div
-      className={cn(
-        'space-y-5',
-        isCenter ? 'text-center mx-auto' : 'text-right',
-        className
-      )}
-    >
+    <div className={cn('space-y-4', isCenter && 'mx-auto text-center', className)}>
       {label && (
-        <div className={cn('flex items-center gap-3', isCenter && 'justify-center')}>
-          <span className="h-px w-8 bg-accent/40" />
-          <p
-            className={cn(
-              'text-xs font-semibold uppercase tracking-widest-3 text-accent/80',
-              labelClassName
-            )}
-          >
-            {label}
-          </p>
-        </div>
+        <SectionKicker label={label} className={cn(isCenter && 'justify-center', labelClassName)} />
       )}
 
       {title && (
-        <h2
+        <Heading
           className={cn(
-            'font-semibold tracking-tight text-white',
-            isLg
-              ? 'text-4xl sm:text-5xl lg:text-6xl'
-              : 'text-3xl sm:text-4xl lg:text-[2.625rem]',
-            isCenter && 'max-w-3xl mx-auto'
+            'font-semibold text-ink',
+            isLg ? 'text-title-1' : 'text-title-2',
+            'max-w-3xl',
+            isCenter && 'mx-auto'
           )}
         >
           {title}
-        </h2>
+        </Heading>
       )}
 
       {description && (
         <p
           className={cn(
-            'leading-7 text-brand-400',
-            isLg ? 'text-base sm:text-lg' : 'text-sm sm:text-base',
-            isCenter ? 'max-w-2xl mx-auto' : 'max-w-2xl'
+            'max-w-prose text-ink-secondary',
+            isLg ? 'text-lead' : 'text-body',
+            isCenter && 'mx-auto'
           )}
         >
           {description}
