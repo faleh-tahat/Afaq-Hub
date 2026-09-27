@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
@@ -12,12 +12,14 @@ import { cn } from '@/lib/utils';
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslation();
+  const headerRef = useRef<HTMLElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
-  const isActive = (href: string) =>
-    href === '/' ? pathname === '/' : pathname.startsWith(href);
+  const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
 
   const scrollToId = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -35,34 +37,111 @@ export function SiteHeader() {
     }
   };
 
-  return (
-    <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-brand-950/90 backdrop-blur-2xl">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-4 lg:px-8">
+  // Hairline border and denser backdrop once the page has scrolled.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
+  // Close the mobile menu whenever the route changes.
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  // While the mobile menu is open: lock page scroll, keep focus inside the
+  // header, and close on Escape (returning focus to the toggle).
+  useEffect(() => {
+    if (!open) return;
+    const { overflow } = document.body.style;
+    document.body.style.overflow = 'hidden';
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpen(false);
+        toggleRef.current?.focus();
+        return;
+      }
+      if (e.key !== 'Tab' || !headerRef.current) return;
+      const focusable = headerRef.current.querySelectorAll<HTMLElement>(
+        '#mobile-menu a[href], #mobile-menu button, [data-menu-toggle]'
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = overflow;
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [open]);
+
+  return (
+    <header
+      ref={headerRef}
+      className={cn(
+        'sticky top-0 z-50 border-b transition-[background-color,border-color] duration-300 ease-brand',
+        // No backdrop-filter while the menu is open: it would become the
+        // containing block of the fixed menu panel and clip it to the header.
+        open
+          ? 'border-line bg-canvas'
+          : scrolled
+            ? 'border-line bg-canvas/90 backdrop-blur-xl'
+            : 'border-transparent bg-canvas/70 backdrop-blur-md'
+      )}
+    >
+      <div className="mx-auto flex h-header-sm w-full max-w-container items-center justify-between gap-6 px-5 sm:px-8 lg:h-header">
         {/* Logo */}
-        <Link href="/" aria-label={t.logoAlt} className="inline-flex items-center">
+        <Link
+          href="/"
+          aria-label={t.logoAlt}
+          className="inline-flex shrink-0 items-center rounded-control"
+        >
           <Image
             src="/afaq-logo-full.png"
             alt={t.logoAlt}
             width={1705}
             height={646}
             priority
-            className="h-14 w-auto object-contain sm:h-16"
+            className="h-10 w-auto object-contain lg:h-11"
           />
         </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden items-center gap-1 lg:flex">
-          {t.navLinks.slice(0, 7).map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              data-active={isActive(item.href)}
-              className="nav-link rounded-lg px-3 py-2"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {t.navLinks.slice(0, 7).map((item) => {
+            const active = isActive(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? 'page' : undefined}
+                className={cn(
+                  'relative rounded-control px-3 py-2 text-[0.9375rem] font-medium transition-colors duration-200',
+                  active ? 'text-ink' : 'text-ink-muted hover:text-ink'
+                )}
+              >
+                {item.label}
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    'absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-accent transition-opacity duration-200',
+                    active ? 'opacity-100' : 'opacity-0'
+                  )}
+                />
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Desktop Actions */}
@@ -70,60 +149,36 @@ export function SiteHeader() {
           <Link
             href="/about#join"
             onClick={handleJoinClick}
-            className={cn(
-              buttonVariants({ variant: 'ghost', size: 'sm' }),
-              'inline-flex items-center justify-center'
-            )}
+            className={buttonVariants({ variant: 'primary', size: 'sm' })}
           >
             {t.header.joinUs}
           </Link>
-          <Link
-            href="/contact"
-            className={cn(
-              buttonVariants({ variant: 'secondary', size: 'sm' }),
-              'inline-flex items-center justify-center'
-            )}
-          >
+          <Link href="/contact" className={buttonVariants({ variant: 'secondary', size: 'sm' })}>
             {t.header.contact}
           </Link>
         </div>
 
         {/* Mobile Toggle */}
         <button
+          ref={toggleRef}
           type="button"
+          data-menu-toggle
           aria-label={open ? t.header.closeMenu : t.header.openMenu}
           aria-expanded={open}
+          aria-controls="mobile-menu"
           className={cn(
-            'inline-flex h-10 w-10 items-center justify-center rounded-xl border transition-all duration-200 lg:hidden',
+            'inline-flex h-11 w-11 items-center justify-center rounded-control border transition-colors duration-200 lg:hidden',
             open
-              ? 'border-accent/30 bg-accent/10 text-accent'
-              : 'border-white/10 bg-brand-900 text-brand-300 hover:border-white/20 hover:text-white'
+              ? 'border-accent/40 bg-accent/10 text-accent'
+              : 'border-line-strong bg-surface text-ink hover:bg-surface-raised'
           )}
           onClick={() => setOpen((v) => !v)}
         >
-          <AnimatePresence mode="wait" initial={false}>
-            {open ? (
-              <motion.span
-                key="close"
-                initial={{ rotate: -45, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: 45, opacity: 0 }}
-                transition={{ duration: 0.15 }}
-              >
-                <X className="h-4 w-4" />
-              </motion.span>
-            ) : (
-              <motion.span
-                key="menu"
-                initial={{ rotate: 45, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: -45, opacity: 0 }}
-                transition={{ duration: 0.15 }}
-              >
-                <Menu className="h-4 w-4" />
-              </motion.span>
-            )}
-          </AnimatePresence>
+          {open ? (
+            <X className="h-5 w-5" aria-hidden="true" />
+          ) : (
+            <Menu className="h-5 w-5" aria-hidden="true" />
+          )}
         </button>
       </div>
 
@@ -131,65 +186,59 @@ export function SiteHeader() {
       <AnimatePresence>
         {open && (
           <motion.div
+            id="mobile-menu"
             key="mobile-menu"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="overflow-hidden border-t border-white/[0.06] bg-brand-950/98 lg:hidden"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed inset-x-0 bottom-0 top-header-sm overflow-y-auto border-t border-line bg-canvas lg:hidden"
           >
-            <div className="mx-auto max-w-7xl space-y-1 px-6 py-5">
-              {t.navLinks.map((item, i) => (
-                <motion.div
-                  key={item.href}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.04, duration: 0.2 }}
-                >
-                  <Link
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    className={cn(
-                      'flex items-center rounded-xl px-4 py-3 text-sm font-medium transition-all duration-150',
-                      isActive(item.href)
-                        ? 'bg-accent/8 text-white border border-accent/15'
-                        : 'text-brand-300 hover:bg-brand-900/60 hover:text-white'
-                    )}
-                  >
-                    {item.label}
-                    {isActive(item.href) && (
-                      <span className="ms-auto h-1.5 w-1.5 rounded-full bg-accent" />
-                    )}
-                  </Link>
-                </motion.div>
-              ))}
+            <nav className="mx-auto flex min-h-full w-full max-w-container flex-col px-5 pb-8 pt-4 sm:px-8">
+              <ul className="divide-y divide-line">
+                {t.navLinks.map((item) => {
+                  const active = isActive(item.href);
+                  return (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        onClick={() => setOpen(false)}
+                        aria-current={active ? 'page' : undefined}
+                        className={cn(
+                          'flex min-h-[3.25rem] items-center justify-between gap-4 text-lead font-medium transition-colors duration-150',
+                          active ? 'text-ink' : 'text-ink-secondary hover:text-ink'
+                        )}
+                      >
+                        {item.label}
+                        {active && (
+                          <span aria-hidden="true" className="h-2 w-2 rounded-full bg-accent" />
+                        )}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
 
-              <div className="mt-4 grid grid-cols-2 gap-2 pt-2 border-t border-white/[0.06]">
+              <div className="mt-auto grid grid-cols-2 gap-3 pt-8">
                 <Link
                   href="/about#join"
                   onClick={(e) => {
                     setOpen(false);
                     handleJoinClick(e);
                   }}
-                  className={cn(
-                    buttonVariants({ size: 'default' }),
-                    'inline-flex items-center justify-center'
-                  )}
+                  className={buttonVariants({ size: 'lg' })}
                 >
                   {t.header.joinUs}
                 </Link>
                 <Link
                   href="/contact"
                   onClick={() => setOpen(false)}
-                  className={cn(
-                    buttonVariants({ variant: 'secondary', size: 'default' }),
-                    'inline-flex items-center justify-center'
-                  )}
+                  className={buttonVariants({ variant: 'secondary', size: 'lg' })}
                 >
                   {t.header.contact}
                 </Link>
               </div>
-            </div>
+            </nav>
           </motion.div>
         )}
       </AnimatePresence>
