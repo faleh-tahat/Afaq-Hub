@@ -85,9 +85,6 @@ const nextConfig = {
   // Generate ETags for all responses
   generateEtags: true,
 
-  // Optimize bundle
-  swcMinify: true,
-
   // Power UPS
   experimental: {
     optimizePackageImports: ['framer-motion', 'lucide-react'],
