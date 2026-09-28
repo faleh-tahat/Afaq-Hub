@@ -52,6 +52,9 @@ const nextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 31536000, // 1 year
+    // Only the default quality is used; rejecting others stops attackers from
+    // forcing a fresh (CPU-heavy) optimisation per request via ?q=.
+    qualities: [75],
   },
 
   // Security & Caching Headers
