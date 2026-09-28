@@ -39,7 +39,11 @@ const securityHeaders = [
   { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
   { key: 'X-Permitted-Cross-Domain-Policies', value: 'none' },
   { key: 'Content-Security-Policy', value: contentSecurityPolicy },
-  { key: 'Content-Security-Policy-Report-Only', value: contentSecurityPolicyReportOnly },
+  // Production only: `next dev` relies on eval for hot reload, which would
+  // flood the console and /api/csp-report with expected violations.
+  ...(process.env.NODE_ENV === 'production'
+    ? [{ key: 'Content-Security-Policy-Report-Only', value: contentSecurityPolicyReportOnly }]
+    : []),
 ];
 
 /** @type {import('next').NextConfig} */
