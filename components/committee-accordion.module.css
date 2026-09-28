@@ -1,0 +1,306 @@
+.wrapper {
+  --panel-h: 520px;
+  --gap: 8px;
+  --radius: 24px;
+}
+
+.hint {
+  font-size: 13px;
+  color: #9AA3B2;
+  font-family: var(--font-plex-arabic), system-ui, sans-serif;
+}
+
+.acc {
+  display: flex;
+  gap: var(--gap);
+  height: var(--panel-h);
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pan {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  flex: 1 1 0;
+  min-width: 0;
+  transition: flex-grow 0.7s cubic-bezier(0.25, 0.8, 0.25, 1);
+  isolation: isolate;
+}
+
+.panOpen {
+  flex-grow: 4.6;
+}
+
+.panGrid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+.panGlow {
+  position: absolute;
+  top: -120px;
+  right: -120px;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.14), transparent);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.panBig {
+  position: absolute;
+  bottom: -60px;
+  left: -60px;
+  width: 300px;
+  height: 300px;
+  stroke: rgba(255, 255, 255, 0.07);
+  stroke-width: 0.6;
+  fill: none;
+  z-index: -1;
+  pointer-events: none;
+  transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.panOpen .panBig {
+  transform: scale(1.08);
+}
+
+.panShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(7, 8, 11, 0.55), transparent 60%);
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.panOpen .panShade {
+  opacity: 0.35;
+}
+
+.panToggle {
+  position: absolute;
+  inset: 0;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+  padding: 28px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  transition: opacity 0.3s ease;
+  font-family: var(--font-plex-arabic), system-ui, sans-serif;
+}
+
+.panToggle:focus-visible {
+  outline: 2px solid #22D7FF;
+  outline-offset: -4px;
+  border-radius: calc(var(--radius) - 4px);
+}
+
+.panOpen .panToggle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.panNum {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.panStack {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.45;
+  white-space: pre-line;
+}
+
+.panChev {
+  width: 44px;
+  height: 44px;
+  stroke: #fff;
+  stroke-width: 2.4;
+  fill: none;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.pan:hover .panChev {
+  transform: translateX(-6px);
+}
+
+.panBody {
+  position: absolute;
+  inset: 0;
+  padding: 36px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 480px;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.panBodyOpen {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  transition: opacity 0.5s ease 0.3s, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s;
+}
+
+.panMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.panIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.panTitle {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #fff;
+}
+
+.panDesc {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.82);
+  max-width: 440px;
+}
+
+.panLabel {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  padding-top: 6px;
+}
+
+.panTags {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  max-width: 440px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.panTags li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #fff;
+  transition: background 0.25s ease, padding 0.25s ease;
+}
+
+.panTags li:hover {
+  background: rgba(255, 255, 255, 0.14);
+  padding-inline-start: 18px;
+}
+
+.tagDot {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  stroke: #22D7FF;
+  stroke-width: 2.6;
+  fill: none;
+}
+
+@media (max-width: 900px) {
+  .acc {
+    flex-direction: column;
+    height: auto;
+  }
+  .pan {
+    flex: none;
+    height: 88px;
+    transition: height 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  .panOpen {
+    height: 520px;
+  }
+  .panToggle {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 16px;
+    padding: 0 24px;
+    height: 88px;
+    bottom: auto;
+  }
+  .panStack {
+    white-space: normal;
+    font-size: 17px;
+    flex: 1;
+    text-align: start;
+  }
+  .panChev {
+    width: 28px;
+    height: 28px;
+    transform: rotate(-90deg);
+  }
+  .pan:hover .panChev {
+    transform: rotate(-90deg);
+  }
+  .panBody {
+    min-width: 0;
+    padding: 28px 24px;
+  }
+  .panTitle {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .panOpen {
+    height: 600px;
+  }
+  .panTags {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrapper * {
+    transition: none !important;
+  }
+}

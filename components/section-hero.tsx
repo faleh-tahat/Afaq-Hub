@@ -7,6 +7,7 @@ import { ArrowLeft } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import { StatsImpact } from '@/components/stats-impact';
 import { cn } from '@/lib/utils';
+import { shimmerBlurDataURL } from '@/lib/blur-placeholder';
 import { useTranslation } from '@/components/language-provider';
 
 export function SectionHero() {
@@ -23,6 +24,8 @@ export function SectionHero() {
           fill
           priority
           sizes="100vw"
+          placeholder="blur"
+          blurDataURL={shimmerBlurDataURL(1920, 780)}
           className="object-cover object-top"
         />
         {/* Seamless fade into content section below */}

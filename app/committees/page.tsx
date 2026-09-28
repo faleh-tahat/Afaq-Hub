@@ -2,31 +2,32 @@
 
 import { motion } from 'framer-motion';
 import { GraduationCap, CalendarDays, Megaphone, Handshake, Cpu, Briefcase } from 'lucide-react';
-import { CommitteeCards, type CommitteeCardItem } from '@/components/committee-cards';
+import { CommitteeAccordion, type CommitteeAccordionItem } from '@/components/committee-accordion';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { useTranslation } from '@/components/language-provider';
 
 const iconMap = { GraduationCap, CalendarDays, Megaphone, Handshake, Cpu, Briefcase };
 
-// A single, unified card surface (the brand's "raised" elevation tone) with
-// the icon/underline/glow accent rotating through the logo's own cyan->blue
-// gradient family, instead of two flat, brand-unrelated colors.
-const CARD_BG = '#171A21';
-const ACCENT_ROTATION = ['#22D7FF', '#0B78E7', '#9BD8FF'];
-
-const BOX_STYLES = ACCENT_ROTATION.map((accent) => ({
-  bg: CARD_BG,
-  textColor: accent,
-}));
+// Per-panel background + short vertical label + focus-area tags (lifted
+// verbatim from each committee's own description) for the accordion's
+// closed/open states — presentational extras the i18n copy doesn't carry.
+const PANEL_EXTRAS = [
+  { color: '#0B4F86', stack: 'التدريب\nوبناء\nالقدرات', tags: ['البرامج التدريبية', 'ورش العمل', 'استقطاب الخبرات', 'الذكاء الاصطناعي'] },
+  { color: '#0C5E6B', stack: 'الفعاليات\nوالأنشطة\nالميدانية', tags: ['الفعاليات والمبادرات', 'المؤتمرات والملتقيات', 'الجوانب اللوجستية', 'إدارة المتطوعين'] },
+  { color: '#2B3590', stack: 'الإعلام\nوالتسويق\nالرقمي', tags: ['صناعة المحتوى', 'المنصات الرقمية', 'الحملات الإعلامية', 'الهوية البصرية'] },
+  { color: '#123A5E', stack: 'الشراكات\nوالعلاقات\nالمؤسسية', tags: ['الشراكات الاستراتيجية', 'الداعمين والرعاة', 'اللقاءات الرسمية', 'المنح والمشاريع المشتركة'] },
+  { color: '#0A6F99', stack: 'الابتكار\nوالتحول\nالرقمي', tags: ['الذكاء الاصطناعي وعلوم البيانات', 'المشاريع التقنية', 'مشروع «نُنتج»', 'التقنيات الناشئة'] },
+  { color: '#1E2A55', stack: 'الخريجون\nوالتطوير\nالمهني', tags: ['مجتمع الخريجين', 'التدريب والتوظيف', 'الإرشاد المهني', 'الشبكة المهنية'] },
+];
 
 export default function CommitteesPage() {
   const t = useTranslation();
 
-  const items: CommitteeCardItem[] = t.committees.list.map((committee, i) => ({
+  const items: CommitteeAccordionItem[] = t.committees.list.map((committee, i) => ({
     icon: iconMap[committee.icon as keyof typeof iconMap],
     title: committee.title,
     description: committee.description,
-    ...BOX_STYLES[i % BOX_STYLES.length],
+    ...PANEL_EXTRAS[i % PANEL_EXTRAS.length],
   }));
 
   return (
@@ -46,7 +47,7 @@ export default function CommitteesPage() {
         </motion.div>
 
         <div className="mt-14">
-          <CommitteeCards items={items} />
+          <CommitteeAccordion items={items} hint="مرّر أو اضغط على اللجنة لعرض تفاصيلها" />
         </div>
       </main>
     </div>

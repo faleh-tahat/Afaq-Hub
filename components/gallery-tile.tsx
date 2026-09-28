@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { shimmerBlurDataURL } from '@/lib/blur-placeholder';
 
 export interface GalleryTileItem {
   label: string;
@@ -23,6 +24,8 @@ export function GalleryTile({ item, index }: { item: GalleryTileItem; index: num
           alt={item.label}
           fill
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          placeholder="blur"
+          blurDataURL={shimmerBlurDataURL()}
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
 

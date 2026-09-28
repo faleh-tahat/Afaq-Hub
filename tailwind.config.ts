@@ -13,10 +13,10 @@ const config: Config = {
           // -> overlay): each step is a deliberate, slightly lifted tone
           // rather than a flat near-black, so sections/cards separate
           // through tone instead of relying on borders/glow alone.
-          950: '#08090C', // base
-          900: '#101216', // surface
-          800: '#171A21', // raised
-          700: '#1E222B', // overlay
+          950: '#090B14', // base — subtle navy cast
+          900: '#10131F', // surface
+          800: '#171B2B', // raised
+          700: '#1E2335', // overlay
           600: '#4A5260',
           500: '#9BD8FF',
           400: '#AFB7C4', // secondary text, tuned for 4.5:1 on 950/900
