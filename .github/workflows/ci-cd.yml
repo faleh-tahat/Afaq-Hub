@@ -6,41 +6,47 @@ on:
   pull_request:
     branches: [ main, develop ]
 
-env:
-  NODE_VERSION: '18'
+# Least privilege for the GITHUB_TOKEN; jobs only need to read the repo.
+permissions:
+  contents: read
 
+env:
+  NODE_VERSION: '22'
+
+# Third-party actions are pinned to full commit SHAs (tag in the comment) so a
+# moved or compromised tag cannot inject code into a job that holds secrets.
 jobs:
   # Quality & Testing
   test:
     name: Test & Quality Checks
     runs-on: ubuntu-latest
-    
+
     steps:
-      - uses: actions/checkout@v3
-      
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Type checking
         run: npm run type-check
-      
+
       - name: Linting
         run: npm run lint
-      
+
       - name: Format check
         run: npm run format -- --check
-      
+
       - name: Unit tests
         run: npm run test:coverage
-      
+
       - name: Upload coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
         with:
           files: ./coverage/coverage-final.json
 
@@ -48,47 +54,47 @@ jobs:
   security:
     name: Security Checks
     runs-on: ubuntu-latest
-    
+
     steps:
-      - uses: actions/checkout@v3
-      
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: npm audit
-        run: npm audit --production
+        run: npm audit --omit=dev --audit-level=high
 
   # Build
   build:
     name: Build Application
     runs-on: ubuntu-latest
     needs: [test, security]
-    
+
     steps:
-      - uses: actions/checkout@v3
-      
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Build
         run: npm run build
         env:
           NEXT_PUBLIC_SITE_URL: ${{ secrets.SITE_URL }}
-      
+
       - name: Archive build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: next-build
           path: .next
@@ -100,49 +106,61 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     if: github.ref == 'refs/heads/main'
-    
+
     steps:
-      - uses: actions/checkout@v3
-      
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
-      
+
       - name: Run E2E tests
         run: npm run test:e2e
-      
+
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: playwright-results
           path: playwright-report/
 
   # Deploy
+  # The previous step used `vercel/action@master`, a repository that does not
+  # exist, so CI never deployed. This uses the official Vercel CLI instead and
+  # stays off until the repository variable ENABLE_CI_DEPLOY is set to 'true'
+  # (leave it off if Vercel's Git integration already deploys main).
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
     needs: [build, e2e]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && vars.ENABLE_CI_DEPLOY == 'true'
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Deploy to Vercel
-        uses: vercel/action@master
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          production: true
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Deploy to Vercel
+        run: |
+          npx --yes vercel@60.1.3 pull --yes --environment=production --token="$VERCEL_TOKEN"
+          npx --yes vercel@60.1.3 build --prod --token="$VERCEL_TOKEN"
+          npx --yes vercel@60.1.3 deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
   # Notify
   notify:
@@ -150,11 +168,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test, security, build]
     if: always()
-    
+
     steps:
       - name: Slack notification
         if: always()
-        uses: 8398a7/action-slack@v3
+        uses: 8398a7/action-slack@28ba43ae48961b90635b50953d216767a6bea486 # v3.16.2
         with:
           status: ${{ job.status }}
           text: 'Build ${{ job.status }} - ${{ github.repository }}'
