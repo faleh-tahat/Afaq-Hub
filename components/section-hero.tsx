@@ -16,8 +16,12 @@ export function SectionHero() {
   return (
     <section className="overflow-hidden bg-brand-950">
 
-      {/* ── Hero Image — full width, all members visible ── */}
-      <div className="relative w-full" style={{ height: 'clamp(320px, 72vh, 780px)' }}>
+      {/* ── Hero Image — full width, all members visible.
+          On phones the container matches the photo's own aspect ratio so
+          object-cover has nothing to crop (a fixed vh height on a narrow
+          screen was cropping most of the group out); wider screens keep
+          the taller, vh-based banner. ── */}
+      <div className="relative w-full aspect-[1600/772] md:aspect-auto md:h-[clamp(320px,72vh,780px)]">
         <Image
           src="/hero-team.jpeg"
           alt="AFAQ Tech Team"
