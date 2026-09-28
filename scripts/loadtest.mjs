@@ -33,11 +33,15 @@ const targets = ['/', '/about', '/gallery', '/api/health', '/_next/image?url=%2F
 const rows = [];
 for (const path of targets) {
   const url = new URL(path, base).toString();
-  const run = spawnSync(
-    'npx',
-    ['--yes', 'autocannon@8', '-j', '-c', connections, '-d', duration, '-H', 'Accept-Encoding: gzip', url],
-    { encoding: 'utf8', shell: process.platform === 'win32', maxBuffer: 64 * 1024 * 1024 }
-  );
+  const cmdArgs = ['--yes', 'autocannon@8', '-j', '-c', connections, '-d', duration, '-H', 'Accept-Encoding: gzip', url];
+  // npx is a .cmd shim on Windows and needs a shell there; quote every argument
+  // so '&' in URLs and spaces in headers survive cmd.exe.
+  const win = process.platform === 'win32';
+  const run = spawnSync(win ? 'npx.cmd' : 'npx', win ? cmdArgs.map((a) => `"${a}"`) : cmdArgs, {
+    encoding: 'utf8',
+    shell: win,
+    maxBuffer: 64 * 1024 * 1024,
+  });
   const json = run.stdout.slice(run.stdout.indexOf('{'));
   const r = JSON.parse(json);
   rows.push({
@@ -45,6 +49,7 @@ for (const path of targets) {
     'req/s': Math.round(r.requests.average),
     'p50 ms': r.latency.p50,
     'p99 ms': r.latency.p99,
+    '2xx': r['2xx'],
     non2xx: r.non2xx,
     errors: r.errors + r.timeouts,
   });
