@@ -36,22 +36,31 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const routeSlug = (route) => (route === '/' ? 'home' : route.replace(/^\//, '').replace(/\//g, '-'));
 
 const browser = await chromium.launch();
+// The app explicitly respects prefers-reduced-motion (both framer-motion's
+// whileInView reveals and the custom count-up in stats-impact.tsx jump
+// straight to their end state when it's set). Auditing under reduced motion
+// sidesteps two separate animation-timing artifacts we hit otherwise:
+// whileInView sections capturing blank, and the count-up capturing mid-tween.
+const context = await browser.newContext({ reducedMotion: 'reduce' });
 const content = {};
 
 for (const route of ROUTES) {
   const slug = routeSlug(route) === '404-check' || route.includes('does-not-exist') ? '404' : routeSlug(route);
 
   for (const vp of WIDTHS) {
-    const page = await browser.newPage({ viewport: { width: vp.width, height: vp.height } });
+    const page = await context.newPage({ viewport: { width: vp.width, height: vp.height } });
+    await page.setViewportSize({ width: vp.width, height: vp.height });
     const res = await page.goto(BASE + route, { waitUntil: 'load', timeout: 30000 }).catch((e) => {
       console.error(`Failed to load ${route} @ ${vp.name}:`, e.message);
       return null;
     });
     await page.waitForTimeout(300);
 
-    // Scroll through the whole page first so framer-motion's `whileInView`
-    // reveal animations actually fire before the screenshot, otherwise
-    // unvisited sections capture as blank (opacity: 0).
+    // framer-motion's `whileInView` reveals don't automatically respect
+    // prefers-reduced-motion (only code that explicitly calls
+    // useReducedMotion(), like the count-up, does) - so still scroll through
+    // to fire their IntersectionObservers, otherwise unvisited sections
+    // capture as blank (opacity: 0).
     await page.evaluate(async () => {
       const step = 400;
       const delay = 60;
@@ -64,7 +73,11 @@ for (const route of ROUTES) {
       }
       window.scrollTo(0, 0);
     });
-    await page.waitForTimeout(400); // settle animations back at top
+    // The count-up itself checks useReducedMotion() and jumps straight to
+    // its target under the `reducedMotion: 'reduce'` context, so this only
+    // needs to cover the whileInView opacity/transform settling, not a 1.6s
+    // tween.
+    await page.waitForTimeout(500);
 
     // Resize the viewport to the full document height and take a single
     // non-scrolling screenshot. `fullPage: true` internally scrolls and

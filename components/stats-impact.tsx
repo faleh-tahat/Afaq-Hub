@@ -31,7 +31,13 @@ function useCountUp(target: number, { threshold = 0.4 }: { threshold?: number } 
   const ref = useRef<HTMLDivElement>(null);
   const hasAnimated = useRef(false);
   const reduceMotion = useReducedMotion();
-  const [display, setDisplay] = useState(reduceMotion ? target : 0);
+  // Always start at 0, matching the server render. `useReducedMotion()`
+  // reads the client's real preference synchronously on first render, so
+  // seeding this from `reduceMotion` here would mismatch the server (which
+  // always renders 0) whenever the visitor has reduced motion enabled,
+  // triggering a hydration error and discarding the SSR HTML. The effect
+  // below corrects it to the target immediately post-hydration instead.
+  const [display, setDisplay] = useState(0);
 
   useEffect(() => {
     const el = ref.current;
