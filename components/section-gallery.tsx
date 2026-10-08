@@ -1,13 +1,17 @@
 'use client';
 
+import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { GalleryTile } from '@/components/gallery-tile';
+import { GalleryStoryModal } from '@/components/gallery-story-modal';
 import { useTranslation } from '@/components/language-provider';
 
 export function SectionGallery() {
   const t = useTranslation();
+  const [storyIndex, setStoryIndex] = useState<number | null>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
 
   return (
     <section className="py-24 sm:py-32">
@@ -28,9 +32,24 @@ export function SectionGallery() {
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {t.gallery.items.map((item, i) => (
-            <GalleryTile key={item.label} item={item} index={i} />
+            <GalleryTile
+              key={item.label}
+              item={item}
+              index={i}
+              onOpen={(trigger) => {
+                openerRef.current = trigger;
+                setStoryIndex(i);
+              }}
+            />
           ))}
         </div>
+        <GalleryStoryModal
+          items={t.gallery.items}
+          index={storyIndex}
+          onIndexChange={setStoryIndex}
+          onClose={() => setStoryIndex(null)}
+          returnFocusRef={openerRef}
+        />
       </div>
     </section>
   );

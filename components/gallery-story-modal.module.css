@@ -1,0 +1,273 @@
+/* Gallery story modal.
+   Breakpoints: desktop ≥ 901px (split), tablet 601–900px (stacked card),
+   mobile ≤ 600px (bottom sheet). Logical properties throughout for RTL. */
+
+/* ─── Overlay ───────────────────────────────────────────── */
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 100; /* above the sticky site header (z-50) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 5, 5, 0.62);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  backdrop-filter: blur(16px) saturate(120%);
+  pointer-events: none; /* clicks land on .root, which closes */
+}
+
+/* ─── Dialog surface (desktop: split) ───────────────────── */
+.dialog {
+  position: relative;
+  display: flex;
+  flex-direction: row; /* RTL: first child (image) renders on the right */
+  width: 100%;
+  max-width: 1080px;
+  height: 620px; /* fixed so the dialog never jumps between stories */
+  max-height: calc(100dvh - 64px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 28px;
+  background: #0f0f11;
+  box-shadow:
+    0 40px 120px -20px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  color: #f4f4f5;
+  text-align: start;
+  outline: none;
+}
+
+/* ─── Image column ──────────────────────────────────────── */
+.media {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  background: #0a0a0c;
+}
+
+.mediaLayer {
+  position: absolute;
+  inset: 0;
+}
+
+/* ─── Text column ───────────────────────────────────────── */
+.text {
+  display: flex;
+  flex: 0 0 440px;
+  flex-direction: column;
+  width: 440px;
+  min-height: 0;
+  padding: 20px 36px 24px;
+  border-inline-start: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.closeRow {
+  display: flex;
+  justify-content: flex-end; /* inline end = left in RTL */
+  margin-bottom: 8px;
+}
+
+.scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-bottom: 28px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 28px), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 28px), transparent);
+}
+
+.scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+}
+
+/* Outgoing and incoming stories share one grid cell to crossfade in place. */
+.stack {
+  display: grid;
+}
+
+.story {
+  grid-area: 1 / 1;
+}
+
+.title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0;
+  color: #f4f4f5;
+  text-wrap: balance;
+}
+
+.desc {
+  margin: 16px 0 0;
+  font-size: 17px;
+  line-height: 2;
+  color: rgba(244, 244, 245, 0.76);
+  text-wrap: pretty;
+}
+
+/* ─── Navigation footer ─────────────────────────────────── */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.counter {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(244, 244, 245, 0.6);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Icon buttons ──────────────────────────────────────── */
+.iconButton {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #f4f4f5;
+  cursor: pointer;
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease;
+}
+
+.iconButton:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Beats the global `button:focus-visible` rule (cyan, 4px radius). */
+.iconButton:focus-visible {
+  outline: 2px solid #f4f4f5;
+  outline-offset: 3px;
+  border-radius: 9999px;
+}
+
+/* Mobile-only affordances */
+.handle,
+.grab {
+  display: none;
+}
+
+/* ─── Tablet + mobile: stacked ──────────────────────────── */
+@media (max-width: 900px) {
+  .root {
+    padding: 24px;
+  }
+
+  .dialog {
+    flex-direction: column;
+    max-width: 560px;
+    height: auto;
+    max-height: calc(100dvh - 48px);
+    padding-top: 56px;
+  }
+
+  .media {
+    flex: none;
+    margin: 0 12px;
+    aspect-ratio: 16 / 10;
+    border-radius: 18px;
+  }
+
+  .text {
+    flex: 1 1 auto;
+    width: auto;
+    padding: 20px 20px 16px;
+    border-inline-start: 0;
+  }
+
+  .closeRow {
+    position: absolute;
+    top: 6px;
+    inset-inline-end: 12px;
+    z-index: 2;
+    margin: 0;
+  }
+}
+
+/* ─── Mobile: bottom sheet ──────────────────────────────── */
+@media (max-width: 600px) {
+  .root {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .dialog {
+    max-width: none;
+    max-height: 92dvh;
+    border-bottom: 0;
+    border-radius: 28px 28px 0 0;
+    box-shadow: 0 -24px 80px rgba(0, 0, 0, 0.7);
+  }
+
+  .handle {
+    position: absolute;
+    top: 8px;
+    inset-inline: 0;
+    display: block;
+    width: 36px;
+    height: 5px;
+    margin-inline: auto;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.24);
+    pointer-events: none;
+  }
+
+  /* Swipe-down zone: the top strip and the photo (not the scrolling text). */
+  .grab {
+    position: absolute;
+    top: 0;
+    inset-inline: 0;
+    z-index: 1;
+    display: block;
+    height: 56px;
+    touch-action: none;
+  }
+
+  .media {
+    touch-action: none;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .desc {
+    font-size: 16px;
+    line-height: 1.95;
+  }
+
+  .footer {
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  }
+}

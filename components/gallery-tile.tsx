@@ -10,7 +10,16 @@ export interface GalleryTileItem {
   caption?: string;
 }
 
-export function GalleryTile({ item, index }: { item: GalleryTileItem; index: number }) {
+export function GalleryTile({
+  item,
+  index,
+  onOpen,
+}: {
+  item: GalleryTileItem;
+  index: number;
+  /** Opens the story modal; receives the trigger so focus can return to it. */
+  onOpen?: (trigger: HTMLButtonElement) => void;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.97 }}
@@ -40,6 +49,19 @@ export function GalleryTile({ item, index }: { item: GalleryTileItem; index: num
             {item.caption ?? item.label}
           </p>
         </div>
+
+        {/* Transparent full-tile trigger: keeps the card's look and hover
+            intact while making it clickable and keyboard-focusable. The
+            focus ring is inset because the tile clips its overflow. */}
+        {onOpen && (
+          <button
+            type="button"
+            aria-haspopup="dialog"
+            aria-label={item.label}
+            onClick={(e) => onOpen(e.currentTarget)}
+            className="absolute inset-0 z-10 cursor-pointer rounded-3xl focus-visible:rounded-3xl focus-visible:outline-offset-[-3px]"
+          />
+        )}
       </div>
     </motion.div>
   );
