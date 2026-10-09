@@ -28,6 +28,18 @@
   --afaq-accent: rgb(var(--afaq-accent-rgb));
   --afaq-accent-hover: #67e8f9;
   --afaq-on-accent: #04161c;
+
+  /* «ننتج» (projects page) palette */
+  --nt-afaq: #29c5f6;
+  --nt-bayyina: #4fe3b5; /* الحق */
+  --nt-mutarannim: #c9a2ff; /* الجمال */
+  --nt-mihbash: #f4b740; /* الذاكرة */
+  --nt-embroidery: #e0414b;
+  --nt-rose: #deac9f;
+  --nt-dawn: #ffe3a3;
+  --nt-sun: #ffc567;
+  --nt-text: #eef1f6;
+  --nt-text-2: #a7b0c2;
 }
 
 html {
