@@ -1,0 +1,639 @@
+/* «من نحن» page. Desktop ≥ 1024px; stacked < 1024px; small phones < 640px.
+   Colors come from the --afaq-* tokens in globals.css. */
+
+.page {
+  background: var(--afaq-page);
+  color: var(--afaq-body);
+}
+
+.container {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 32px;
+}
+
+/* ─── Type ──────────────────────────────────────────────── */
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--afaq-accent);
+}
+
+/* The rule follows the label, so in RTL it sits to its left. */
+.eyebrow::after {
+  content: '';
+  flex: none;
+  width: 32px;
+  height: 1px;
+  background: rgb(var(--afaq-accent-rgb) / 0.6);
+}
+
+.h1,
+.h2 {
+  margin: 16px 0 0;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--afaq-heading);
+  text-wrap: balance;
+}
+
+.h1 {
+  font-size: 72px;
+  line-height: 1.2;
+}
+
+.h2 {
+  font-size: 44px;
+  line-height: 1.3;
+}
+
+.h2Solo {
+  margin-top: 0;
+}
+
+.lead {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.9;
+  color: var(--afaq-lead);
+}
+
+.statement {
+  margin: 0;
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 1.7;
+  color: var(--afaq-heading);
+}
+
+.body {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.95;
+  color: var(--afaq-body);
+}
+
+/* ─── Hero ──────────────────────────────────────────────── */
+.hero {
+  padding: 88px 0 104px;
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: 7fr 5fr; /* RTL: text right, image left */
+  gap: 64px;
+  align-items: start;
+  margin-top: 48px;
+}
+
+.heroText > p {
+  max-width: 640px;
+}
+
+.heroStatement {
+  margin-top: 32px;
+}
+
+.heroBody {
+  margin-top: 32px;
+}
+
+.heroTagline {
+  margin: 24px 0 0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.8;
+  color: var(--afaq-heading);
+}
+
+.heroMedia {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1px solid var(--afaq-border);
+  border-radius: 28px;
+  background: var(--afaq-surface);
+}
+
+/* ─── Slogan band ───────────────────────────────────────── */
+.band {
+  padding: 72px 0;
+  border-block: 1px solid var(--afaq-hairline);
+  background: var(--afaq-band);
+}
+
+.slogan {
+  margin: 0;
+  font-size: 76px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-wrap: balance;
+  color: var(--afaq-heading);
+}
+
+.slogan span {
+  color: var(--afaq-accent);
+}
+
+/* ─── Journey (horizon timeline) ────────────────────────── */
+.journey {
+  padding: 120px 0 128px;
+  overflow: hidden;
+}
+
+.horizon {
+  position: relative;
+  margin-top: 64px;
+}
+
+.map,
+.glow,
+.curve {
+  display: none;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.time {
+  display: block;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--afaq-heading);
+}
+
+.item[aria-current] .time {
+  color: var(--afaq-accent);
+}
+
+.itemTitle {
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--afaq-heading);
+}
+
+.itemDesc {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--afaq-body);
+}
+
+@media (min-width: 1024px) {
+  .glow {
+    position: absolute;
+    top: 36px;
+    left: 12.5%; /* physical: matches the SVG's x coordinates */
+    display: block;
+    width: 560px;
+    height: 340px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(closest-side, rgb(var(--afaq-accent-rgb) / 0.15), transparent);
+    pointer-events: none;
+  }
+
+  .curve {
+    position: absolute;
+    top: 0;
+    inset-inline: 0;
+    display: block;
+    width: 100%;
+    height: 260px;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  /* DOM order 2023 → 2026; RTL puts 2023 in the right-hand column, whose
+     center (87.5% from the left) is the curve's x = 875. */
+  .list {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .item {
+    position: relative;
+    padding-inline: 20px;
+    padding-top: var(--item-pt);
+    text-align: center;
+  }
+
+  .node {
+    position: absolute;
+    top: var(--node-top);
+    left: calc(50% - 7px);
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--afaq-accent);
+    border-radius: 50%;
+    background: var(--afaq-page);
+    box-shadow: 0 0 0 6px rgb(var(--afaq-accent-rgb) / 0.08);
+  }
+
+  .item[aria-current] .node {
+    left: calc(50% - 9px);
+    width: 18px;
+    height: 18px;
+    border: 0;
+    background: var(--afaq-accent);
+    box-shadow:
+      0 0 0 8px rgb(var(--afaq-accent-rgb) / 0.16),
+      0 0 32px 6px rgb(var(--afaq-accent-rgb) / 0.45);
+  }
+
+  .time {
+    font-size: 40px;
+    line-height: 1.1;
+  }
+
+  .itemTitle {
+    margin: 12px 0 6px;
+    font-size: 19px;
+  }
+
+  .itemDesc {
+    max-width: 250px;
+    margin-inline: auto;
+    text-wrap: balance;
+  }
+}
+
+@media (max-width: 1023.98px) {
+  .map {
+    position: relative;
+    display: block;
+    height: 192px;
+    margin-top: 28px;
+    margin-inline: -32px; /* bleed to the screen edges */
+  }
+
+  .mapGlow {
+    position: absolute;
+    top: 33px;
+    left: 12.5%;
+    width: 220px;
+    height: 160px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(closest-side, rgb(var(--afaq-accent-rgb) / 0.18), transparent);
+  }
+
+  .mapCurve {
+    position: absolute;
+    top: 12px;
+    left: 0;
+    width: 100%;
+    height: 150px;
+    overflow: visible;
+  }
+
+  .mapDot {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--afaq-accent);
+    border-radius: 50%;
+    background: var(--afaq-page);
+    box-shadow: 0 0 0 4px rgb(var(--afaq-accent-rgb) / 0.08);
+  }
+
+  .mapDotCurrent {
+    width: 14px;
+    height: 14px;
+    border: 0;
+    background: var(--afaq-accent);
+    box-shadow:
+      0 0 0 6px rgb(var(--afaq-accent-rgb) / 0.16),
+      0 0 24px rgb(var(--afaq-accent-rgb) / 0.45);
+  }
+
+  .mapLabel {
+    position: absolute;
+    transform: translateX(-50%);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    color: var(--afaq-lead);
+  }
+
+  .mapLabelCurrent {
+    font-size: 16px;
+    line-height: 22px;
+    color: var(--afaq-accent);
+  }
+
+  .horizon {
+    margin-top: 4px;
+  }
+
+  .node {
+    display: none;
+  }
+
+  .item {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    grid-template-areas:
+      'year title'
+      'year desc';
+    column-gap: 14px;
+    padding: 18px 0;
+    border-top: 1px solid var(--afaq-hairline);
+    text-align: start;
+  }
+
+  .item[aria-current] {
+    margin-top: 8px;
+    padding: 18px 16px;
+    border: 1px solid rgb(var(--afaq-accent-rgb) / 0.35);
+    border-radius: 18px;
+    background: rgb(var(--afaq-accent-rgb) / 0.06);
+  }
+
+  .time {
+    grid-area: year;
+    font-size: 22px;
+    line-height: 1.35;
+  }
+
+  .itemTitle {
+    grid-area: title;
+    margin: 0 0 4px;
+    font-size: 17px;
+  }
+
+  .itemDesc {
+    grid-area: desc;
+    text-wrap: pretty;
+  }
+}
+
+/* ─── Two-column sections (vision, join, contact) ───────── */
+.split {
+  display: grid;
+  grid-template-columns: 4fr 7fr;
+  gap: 64px;
+}
+
+.splitTitle {
+  align-self: start;
+}
+
+@media (min-width: 1024px) {
+  .sticky {
+    position: sticky;
+    top: 104px;
+  }
+}
+
+.measure {
+  max-width: 680px;
+}
+
+/* ─── Vision ────────────────────────────────────────────── */
+.vision {
+  padding: 120px 0;
+  border-top: 1px solid var(--afaq-hairline);
+}
+
+.visionStatement {
+  font-size: 26px;
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+
+.visionBody {
+  margin-top: 28px;
+}
+
+/* ─── Join (CTA panel) ──────────────────────────────────── */
+.join {
+  padding: 0 0 120px;
+}
+
+.panel {
+  position: relative;
+  overflow: hidden;
+  padding: 64px;
+  border: 1px solid var(--afaq-border);
+  border-radius: 32px;
+  background: var(--afaq-surface);
+}
+
+.panelGlow {
+  position: absolute;
+  top: -220px;
+  left: -180px;
+  width: 560px;
+  height: 440px;
+  background: radial-gradient(closest-side, rgb(var(--afaq-accent-rgb) / 0.1), transparent);
+  pointer-events: none;
+}
+
+.panel > .split {
+  position: relative;
+}
+
+.joinBody > p + p {
+  margin-top: 20px;
+}
+
+.joinStatement {
+  margin-top: 36px;
+  font-size: 24px;
+  line-height: 1.7;
+}
+
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 52px;
+  margin-top: 28px;
+  padding-inline: 26px;
+  border-radius: 9999px;
+  background: var(--afaq-accent);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--afaq-on-accent);
+  text-decoration: none;
+  transition: background-color 200ms ease;
+}
+
+.primaryButton:hover {
+  background: var(--afaq-accent-hover);
+}
+
+/* ─── Contact ───────────────────────────────────────────── */
+.contact {
+  padding: 0 0 144px;
+}
+
+.emailCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 680px;
+  margin-top: 20px;
+  padding: 18px 22px;
+  border: 1px solid var(--afaq-border);
+  border-radius: 20px;
+  background: var(--afaq-surface);
+}
+
+.emailText {
+  min-width: 0;
+}
+
+.emailLabel {
+  margin: 0;
+  font-size: 14px;
+  color: var(--afaq-muted);
+}
+
+.emailLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--afaq-heading);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition: color 200ms ease;
+}
+
+.emailLink:hover {
+  color: var(--afaq-accent-hover);
+}
+
+.copyButton {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--afaq-ghost);
+  border-radius: 14px;
+  background: transparent;
+  color: var(--afaq-strong);
+  cursor: pointer;
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease;
+}
+
+.copyButton:hover {
+  border-color: var(--afaq-ghost-hover);
+  background: rgb(255 255 255 / 0.05);
+}
+
+/* ─── Focus (beats the global cyan 4px-radius rule) ─────── */
+.page a:focus-visible,
+.page button:focus-visible {
+  outline: 2px solid var(--afaq-accent);
+  outline-offset: 3px;
+}
+
+.page .primaryButton:focus-visible {
+  border-radius: 9999px;
+}
+
+.page .copyButton:focus-visible {
+  border-radius: 14px;
+}
+
+.page .emailLink:focus-visible {
+  border-radius: 6px;
+}
+
+/* ─── < 1024px: single column ───────────────────────────── */
+@media (max-width: 1023.98px) {
+  .heroGrid,
+  .split {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .heroMedia {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+/* ─── < 640px: small phones ─────────────────────────────── */
+@media (max-width: 639.98px) {
+  .container {
+    padding-inline: 20px;
+  }
+
+  .map {
+    margin-inline: -20px;
+  }
+
+  .h1 {
+    font-size: 40px;
+  }
+
+  .h2 {
+    font-size: 30px;
+  }
+
+  .lead {
+    font-size: 18px;
+  }
+
+  .statement,
+  .visionStatement,
+  .joinStatement {
+    font-size: 21px;
+  }
+
+  .hero,
+  .journey,
+  .vision {
+    padding: 72px 0;
+  }
+
+  .join,
+  .contact {
+    padding-bottom: 72px;
+  }
+
+  .band {
+    padding: 48px 0;
+  }
+
+  .slogan {
+    font-size: 42px;
+  }
+
+  .panel {
+    padding: 28px 22px;
+    border-radius: 24px;
+  }
+
+  .emailLink {
+    font-size: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page *,
+  .page *::before,
+  .page *::after {
+    transition: none !important;
+  }
+}
