@@ -10,6 +10,24 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+
+  /* Design tokens (header + About page). page = brand-950, body = brand-400. */
+  --afaq-page: #090b14;
+  --afaq-surface: #0e0f1b;
+  --afaq-band: #0b0d17;
+  --afaq-border: #20222d;
+  --afaq-hairline: #181923;
+  --afaq-ghost: #2a2e3d;
+  --afaq-ghost-hover: #3a4052;
+  --afaq-heading: #ffffff;
+  --afaq-strong: #e6eaf0;
+  --afaq-lead: #c8cfda;
+  --afaq-body: #afb7c4;
+  --afaq-muted: #8a93a5;
+  --afaq-accent-rgb: 34 211 238; /* #22D3EE, as channels for alpha variants */
+  --afaq-accent: rgb(var(--afaq-accent-rgb));
+  --afaq-accent-hover: #67e8f9;
+  --afaq-on-accent: #04161c;
 }
 
 html {

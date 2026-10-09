@@ -33,6 +33,17 @@ const config: Config = {
           400: '#3DC4FF',
           500: '#0B78E7',
         },
+        // Mirrors the --afaq-* CSS variables in globals.css.
+        afaq: {
+          surface: 'var(--afaq-surface)',
+          hairline: 'var(--afaq-hairline)',
+          ghost: 'var(--afaq-ghost)',
+          'ghost-hover': 'var(--afaq-ghost-hover)',
+          strong: 'var(--afaq-strong)',
+          accent: 'rgb(var(--afaq-accent-rgb) / <alpha-value>)',
+          'accent-hover': 'var(--afaq-accent-hover)',
+          'on-accent': 'var(--afaq-on-accent)',
+        },
         surface: {
           DEFAULT: '#11131A',
           muted:   '#0D1016',
