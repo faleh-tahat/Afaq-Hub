@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useId, useRef, useState, type CSSProperties } from 'react';
-import Image from 'next/image';
 import { ArrowUpLeft, Check, Copy } from 'lucide-react';
+import JordanMap from '@/components/jordan-map';
 import { useTranslation } from '@/components/language-provider';
 import { cn } from '@/lib/utils';
 import s from './about.module.css';
@@ -30,8 +30,6 @@ const HORIZON = {
     currentDotRadius: 7,
   },
 } as const;
-
-const HERO_IMAGE_ALT = 'AFAQ Tech Team';
 
 function HorizonCurve({ className, tailDash }: { className: string; tailDash: string }) {
   const gradientId = `horizon-${useId().replace(/:/g, '')}`;
@@ -160,14 +158,9 @@ export default function AboutPage() {
               <p className={s.heroTagline}>{intro4}</p>
             </div>
             <div className={s.heroMedia}>
-              <Image
-                src="/hero-team.jpeg"
-                alt={HERO_IMAGE_ALT}
-                fill
-                priority
-                sizes="(min-width: 1024px) 460px, 100vw"
-                className="object-cover"
-              />
+              {/* Fills the wrapper, which keeps the size, radius and frame the
+                  photo had (4/5 on desktop, 16/10 below 1024px). */}
+              <JordanMap style={{ aspectRatio: 'auto', height: '100%', borderRadius: 27, border: 'none' }} />
             </div>
           </div>
         </div>
